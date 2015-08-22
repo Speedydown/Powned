@@ -1,0 +1,31 @@
+﻿<Application
+    x:Class="Powned.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Powned">
+
+
+    <Application.Resources>
+        <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#FF0099" />
+        <x:String x:Key="ProgressBarIndeterminateForegroundThemeBrush">#FF0099</x:String>
+
+        <SolidColorBrush x:Key="TextBoxBorderThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="TextBoxForegroundThemeBrush" Color="#FF0099" />
+
+        <SolidColorBrush x:Key="ButtonBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonBorderThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonDisabledBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonDisabledBorderThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonDisabledForegroundThemeBrush" Color="White" />
+        <SolidColorBrush x:Key="ButtonForegroundThemeBrush" Color="LightGray" />
+        <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonPointerOverForegroundThemeBrush" Color="LightGray" />
+        <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonPressedForegroundThemeBrush" Color="White" />
+
+        <SolidColorBrush x:Key="PivotHeaderForegroundSelectedBrush" Color="White" />
+        <SolidColorBrush x:Key="PivotHeaderForegroundUnselectedBrush" Color="LightGray" />
+
+    </Application.Resources>
+</Application>
