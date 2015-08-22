@@ -72,7 +72,7 @@ namespace PownedLogic
         public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
-            this.ContentSummary = Summary;
+            this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
             this.Body = ArticleContent;
             this.Added = Date;
             this.Author = AuthorDate;
@@ -96,7 +96,7 @@ namespace PownedLogic
 
             while (this.Content.EndsWith("\n"))
             {
-                this.Content = this.Content.Substring(0, Content.Length - 1);
+                this.Content = this.Content.Substring(0, this.Content.Length - 1);
             }
 
             this.AuthorDateTime = AuthorDateTIme;
