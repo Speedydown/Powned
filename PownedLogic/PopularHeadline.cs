@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebCrawlerTools;
 
 namespace PownedLogic
 {
@@ -16,7 +17,7 @@ namespace PownedLogic
         {
             this.CommentCount = CommentCount;
             this.URL = URL;
-            this.Title = Title.Replace("\\", "");
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title.Replace("\\", ""));
         }
     }
 }
