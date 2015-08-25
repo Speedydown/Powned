@@ -49,20 +49,14 @@
                 </PivotItem.Header>
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="2.5,2.5">
-                        <ListView x:Name="ActueelListview" ItemTemplate="{StaticResource PownedActueel}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="ActueelListview_ItemClick"/>
+                        <StackPanel>
+                            <TextBlock x:Name="ActueelTextblock" Text="Actueel:"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                            <ListView x:Name="ActueelListview" ItemTemplate="{StaticResource PownedActueel}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="ActueelListview_ItemClick"/>
+                            <TextBlock x:Name="PopularTextblock" Text="Populair:"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                            <ListView x:Name="PopularListview" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
+                        </StackPanel>
                     </ScrollViewer>
                     <CLib:LoadingControl x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Bezig met het ophalen van de laatste actuele nieuwsitems."/>
-                </Grid>
-            </PivotItem>
-            <PivotItem x:Name="PopularHeadlinesPI">
-                <PivotItem.Header>
-                    <TextBlock Text="Populair" FontSize="21" FontWeight="Bold" Margin="0,5,0,0" />
-                </PivotItem.Header>
-                <Grid Margin="-20, -23, -20, 0">
-                    <ScrollViewer VerticalScrollMode="Auto" Margin="2.5,2.5">
-                        <ListView x:Name="PopularListview" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
-                    </ScrollViewer>
-                    <CLib:LoadingControl x:Name="LoadingControlPopular" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Bezig met het ophalen van de populairste nieuwsitems."/>
                 </Grid>
             </PivotItem>
             <PivotItem x:Name="ZoekenPI">

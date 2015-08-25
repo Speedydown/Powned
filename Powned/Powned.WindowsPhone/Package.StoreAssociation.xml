@@ -205,12 +205,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.822.2158.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2015.824.1452.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.822.2158.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2015.824.1452.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

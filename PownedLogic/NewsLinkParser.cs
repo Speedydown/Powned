@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using WebCrawlerTools;
 
 namespace PownedLogic
 {
@@ -14,31 +15,21 @@ namespace PownedLogic
         {
             List<NewsLink> NewsLinks = new List<NewsLink>();
 
-            using (XmlReader reader = XmlReader.Create(new StringReader(Source)))
+            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("id=\"hl-actueel\">", Source, true));
+
+            while (true)
             {
-                reader.ReadToFollowing("item");
-
-                while (true)
+                try
                 {
-                    try
-                    {
-                        reader.ReadToFollowing("title");
-                        string Title = reader.ReadElementContentAsString();
-                        reader.ReadToFollowing("description");
-                        string description = reader.ReadElementContentAsString();
-                        reader.ReadToFollowing("link");
-                        string link = reader.ReadElementContentAsString();
-                        reader.ReadToFollowing("category");
-                        string category = reader.ReadElementContentAsString();
-                        reader.ReadToFollowing("jrs");
-                        string Date = reader.ReadElementContentAsString();
+                    string Time = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"t\">", "</span>", Source, out Source, "", true);
+                    string URL = HTMLParserUtil.GetContentAndSubstringInput("a href=\"", "\">", Source, out Source, "", false);
+                    string Title = HTMLParserUtil.GetContentAndSubstringInput("\">", "</a>", Source, out Source, "", true);
 
-                        NewsLinks.Add(new NewsLink(Title, description, link, category, Date, string.Empty));
-                    }
-                    catch
-                    {
-                        break;
-                    }
+                    NewsLinks.Add(new NewsLink(Title, Time, URL));
+                }
+                catch
+                {
+                    break;
                 }
             }
 

@@ -47,6 +47,13 @@ namespace Powned
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+#if WINDOWS_PHONE_APP
+            if (MainPage.instance != null)
+            {
+                MainPage.ClearCachedData();
+                MainPage.instance.LoadData();
+            }
+#endif
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -132,6 +139,11 @@ namespace Powned
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
         }
     }
 }

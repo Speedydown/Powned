@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebCrawlerTools;
 using WRCHelperLibrary;
 
 namespace PownedLogic
@@ -21,14 +22,14 @@ namespace PownedLogic
             get { return string.Empty; }
         }
 
-        public NewsLink(string Title, string Description, string URL, string Catagory, string Date, string CommentCount)
+        public NewsLink(string Title, string Time, string URL)
         {
-            this.Title = Title;
-            this.Content = Description.Trim();
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title.Replace("\\", "")); ;
+            this.Time = Time;
             this.URL = URL;
-            this.Catagory = Catagory;
-            this.Time = Date.Trim().Split(' ').Last();
-            this.CommentCount = CommentCount;
+            //this.Catagory = Catagory;
+            //this.Time = Date.Trim().Split(' ').Last();
+            //this.CommentCount = CommentCount;
         }
     }
 }

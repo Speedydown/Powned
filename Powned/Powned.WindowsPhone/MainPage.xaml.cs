@@ -31,13 +31,14 @@ namespace Powned
         private static IList<NewsLink> NewsLinks = null;
         private static IList<Headline> Headlines = null;
         private static IList<PopularHeadline> PopularHeadlines = null;
+        public static MainPage instance = null;
 
         public static DateTime TimeLoaded = DateTime.Now.AddDays(-1);
 
         public MainPage()
         {
             this.InitializeComponent();
-
+            instance = this;
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
@@ -118,19 +119,18 @@ namespace Powned
             }
             catch
             {
-                LoadingControlPopular.DisplayLoadingError(true);
                 return new List<PopularHeadline>();
             }
         }
 
-        private async Task LoadData()
+        public async Task LoadData()
         {
+            PopularTextblock.Visibility = Visibility.Collapsed;
+            ActueelTextblock.Visibility = Visibility.Collapsed;
             LoadingControl.DisplayLoadingError(false);
             LoadingControlActueel.DisplayLoadingError(false);
-            LoadingControlPopular.DisplayLoadingError(false);
             LoadingControl.SetLoadingStatus(true);
             LoadingControlActueel.SetLoadingStatus(true);
-            LoadingControlPopular.SetLoadingStatus(true);
             SearchLoadingControl.SetLoadingStatus(false);
             HeadlinesListview.ItemsSource = null;
             ActueelListview.ItemsSource = null;
@@ -140,17 +140,18 @@ namespace Powned
             Task<IList<Headline>> GetHeadlinesTask = GetHeadlinesOperationAsTask();
             Task<IList<PopularHeadline>> GetPopularHeadlinesTask = GetPopularHeadlinesOperationAsTask();
 
-            NewsLinks = await GetNewsLinksTask;
-            LoadingControlActueel.SetLoadingStatus(false);
-            ActueelListview.ItemsSource = NewsLinks;
-
             Headlines = await GetHeadlinesTask;
             LoadingControl.SetLoadingStatus(false);
             HeadlinesListview.ItemsSource = Headlines;
 
+            NewsLinks = await GetNewsLinksTask;
+            ActueelListview.ItemsSource = NewsLinks;
+
             PopularHeadlines = await GetPopularHeadlinesTask;
-            LoadingControlPopular.SetLoadingStatus(false);
             PopularListview.ItemsSource = PopularHeadlines;
+            PopularTextblock.Visibility = Visibility.Visible;
+            ActueelTextblock.Visibility = Visibility.Visible;
+            LoadingControlActueel.SetLoadingStatus(false);
 
             TimeLoaded = DateTime.Now;
 
@@ -160,7 +161,7 @@ namespace Powned
             try
             {
                 localSettings.Values["LastNewsItem"] = NewsLinks.First().URL;
-                NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker");
+                NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker", 30);
             }
             catch
             {

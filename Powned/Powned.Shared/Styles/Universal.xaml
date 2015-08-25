@@ -29,18 +29,13 @@
 
     <DataTemplate x:Key="PownedActueel">
         <Grid x:Name="Content" Margin="4.5,0,0,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{Binding Time}" Margin="4.5,0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="Gray" TextWrapping="WrapWholeWords" />
-            <TextBlock Text="{Binding Title}" Margin="4.5,0"  Grid.Column="0" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" FontWeight="Bold" />
-            <TextBlock Text="{Binding Content}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" />
+            <TextBlock Text="{Binding Time}" Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+            <TextBlock Text="{Binding Title}" Margin="4.5,0"  Grid.Column="1" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" FontWeight="Bold" />
         </Grid>
     </DataTemplate>
 

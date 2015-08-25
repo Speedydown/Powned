@@ -17,7 +17,7 @@ namespace PownedLogic
 
         private static async Task<IList<NewsLink>> GetNewsLinksByPageHelper()
         {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/index.xml", Encoding.GetEncoding("iso-8859-1"));
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
             return NewsLinkParser.GetNewsLinksFromSource(PageSource);
         }
 
