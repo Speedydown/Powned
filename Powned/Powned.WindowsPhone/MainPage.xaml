@@ -79,6 +79,7 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Foreground="White">
+            <AppBarButton x:Uid="SettingsButton" x:Name="SettingsButton" Label="Instellingen" Icon="Setting" Click="SettingsButton_Click"/>
             <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Label="Website" Icon="World" Click="PownedButton_Click" />
             <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Label="Vernieuwen" Icon="Refresh" Click="ReloadButton_Click" />
             <AppBarButton x:Uid="SearchButton" x:Name="SearchButton" Label="Zoeken" Visibility="Collapsed" Icon="Find" Click="SearchButton_Click" />

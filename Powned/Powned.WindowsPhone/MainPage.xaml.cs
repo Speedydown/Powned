@@ -160,7 +160,7 @@ namespace Powned
 
             try
             {
-                localSettings.Values["LastNewsItem"] = NewsLinks.First().URL;
+                localSettings.Values["LastNewsItem"] = Headlines.First().URL;
                 NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker", 30);
             }
             catch
@@ -283,6 +283,11 @@ namespace Powned
         private void SearchListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             Frame.Navigate(typeof(ItemPage), (e.ClickedItem as SearchResult).URL);
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage));
         }
     }
 }

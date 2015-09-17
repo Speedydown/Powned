@@ -1,8 +1,10 @@
-﻿using System;
+﻿using PownedLogic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -51,7 +53,7 @@ namespace Powned
             if (MainPage.instance != null)
             {
                 MainPage.ClearCachedData();
-                MainPage.instance.LoadData();
+                Task t = MainPage.instance.LoadData();
             }
 #endif
 #if DEBUG
@@ -60,6 +62,8 @@ namespace Powned
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+
+            Settings.Init();
 
             Frame rootFrame = Window.Current.Content as Frame;
 

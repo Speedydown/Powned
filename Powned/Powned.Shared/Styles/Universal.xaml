@@ -18,8 +18,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Image Grid.Row="0" Grid.RowSpan="2"  Source="{Binding ImageURL}"  Stretch="Fill" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                <Rectangle Grid.Row="1" Fill="Black" Opacity="0.5f" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                <TextBlock Text="{Binding Title}" Grid.Row="1" Margin="4.5,0" FontSize="16" FontWeight="Bold" Foreground="White" TextWrapping="WrapWholeWords" />
+                <Rectangle Grid.Row="1" Fill="Black" Opacity="0.5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="{Binding Title}" MaxWidth="{Binding Width}" Grid.Row="1" Margin="4.5,0" FontSize="16" FontWeight="Bold" Foreground="White" TextWrapping="WrapWholeWords" />
             </Grid>
             <Grid Grid.Row="1" Margin="2.5, 0, 2, 10" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Left">
                 <TextBlock Text="{Binding HashTag}" Margin="2,0" FontSize="14" FontWeight="Bold" Foreground="White" TextWrapping="WrapWholeWords" />

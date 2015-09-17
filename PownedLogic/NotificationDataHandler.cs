@@ -34,23 +34,20 @@ namespace PownedLogic
                     return NewNewsLinks;
                 }
 
-                IList<NewsLink> News = await Datahandler.GetNewsLinksByPage();
+                IList<Headline> News = await Datahandler.GetHeadlines();
                 int NotificationCounter = 0;
 
                 //Test Code
                 //LastURL = News[3].URL;
 
-                foreach (NewsLink n in News)
+                foreach (Headline h in News)
                 {
-                    if (n.URL == LastURL)
+                    if (h.URL == LastURL)
                     {
-                        if (NotificationCounter > 0)
-                        {
-                            return NewNewsLinks;
-                        }
+                        return NewNewsLinks;
                     }
 
-                    NewNewsLinks.Add(n);
+                    NewNewsLinks.Add(new NewsLink(h.Title, h.HashTag, h.URL));
                     NotificationCounter++;
                 }
             }

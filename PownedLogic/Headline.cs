@@ -32,7 +32,15 @@ namespace PownedLogic
 
         public Headline(string URL, string ImageURL, string Title, string HashTag)
         {
-            this.Bounds = (int)(Window.Current.Bounds.Width);
+            try
+            {
+                this.Bounds = (int)(Window.Current.Bounds.Width);
+            }
+            catch
+            {
+                this.Bounds = 0;
+            }
+
             this.URL = URL;
             this.ImageURL = ImageURL;
             this.Title = Title;
