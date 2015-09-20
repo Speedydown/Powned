@@ -6,14 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using WebCrawlerTools;
+using WRCHelperLibrary;
 
 namespace PownedLogic
 {
     static class NewsLinkParser
     {
-        public static IList<NewsLink> GetNewsLinksFromSource(string Source)
+        public static IList<INewsLink> GetNewsLinksFromSource(string Source)
         {
-            List<NewsLink> NewsLinks = new List<NewsLink>();
+            List<INewsLink> NewsLinks = new List<INewsLink>();
 
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("id=\"hl-actueel\">", Source, true));
 

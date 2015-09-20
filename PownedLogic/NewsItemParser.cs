@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
+using Windows.Storage;
 
 namespace PownedLogic
 {
@@ -11,6 +12,7 @@ namespace PownedLogic
     {
         public static NewsItem GetNewsItemFromSource(string Source)
         {
+            string SourceBackupForTwitterImage = Source;
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
 
             string Date = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"articledate\">", "/p><br />", Source, out Source, "", true);
@@ -41,54 +43,65 @@ namespace PownedLogic
                 }
             }
 
+            string image = string.Empty;
+
+            if (SourceBackupForTwitterImage.Contains("pic.twitter.com"))
+            {
+                SourceBackupForTwitterImage = SourceBackupForTwitterImage.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", SourceBackupForTwitterImage, false));
+                image = "http://pic.twitter.com" + HTMLParserUtil.GetContentAndSubstringInput("pic.twitter.com", "</a>", SourceBackupForTwitterImage, out SourceBackupForTwitterImage);
+            }
+
             string AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
 
             List<Comment> Comments = new List<Comment>();
 
-            try
+            if (ApplicationData.Current.LocalSettings.Values["Reacties weergeven"] != null && Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"]))
             {
-                string CommentHTML = HTMLParserUtil.GetContentAndSubstringInput("<div id=\"comments\">", "<div id=\"reageerhier\">", Source, out Source, "", true);
-
-                while (true)
+                try
                 {
-                    try
+                    string CommentHTML = HTMLParserUtil.GetContentAndSubstringInput("<div id=\"comments\">", "<div id=\"reageerhier\">", Source, out Source, "", true);
+
+                    while (true)
                     {
-                        CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
-                        string Content = string.Empty;
-
-                        string ThisCommentHTML = CommentHTML.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<p class=\"footer\">", CommentHTML, false));
-
-                        while (true)
+                        try
                         {
-                            try
+                            CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
+                            string Content = string.Empty;
+
+                            string ThisCommentHTML = CommentHTML.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<p class=\"footer\">", CommentHTML, false));
+
+                            while (true)
                             {
-                                Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
+                                try
+                                {
+                                    Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
+                                }
+                                catch
+                                {
+                                    break;
+                                }
                             }
-                            catch
-                            {
-                                break;
-                            }
+
+                            Content = Content.Substring(0, Content.Length - 1);
+                            Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
+                                
+                            string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
+
+                            Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
                         }
-
-                        Content = Content.Substring(0, Content.Length - 1);
-                        Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-
-                        string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
-
-                        Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
-                    }
-                    catch
-                    {
-                        break;
+                        catch
+                        {
+                            break;
+                        }
                     }
                 }
-            }
-            catch
-            {
+                catch
+                {
 
+                }
             }
 
-            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, Comments);
+            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, Comments, image);
         }
     }
 }

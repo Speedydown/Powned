@@ -28,7 +28,7 @@ namespace Powned
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        private static IList<NewsLink> NewsLinks = null;
+        private static IList<INewsLink> NewsLinks = null;
         private static IList<Headline> Headlines = null;
         private static IList<PopularHeadline> PopularHeadlines = null;
         public static MainPage instance = null;
@@ -63,8 +63,6 @@ namespace Powned
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
 
             if (NewsLinks == null || DateTime.Now.Subtract(TimeLoaded).TotalMinutes > 5)
             {
@@ -85,16 +83,16 @@ namespace Powned
             }
         }
 
-        private async Task<IList<NewsLink>> GetNewsLinksOperationAsTask()
+        private async Task<IList<INewsLink>> GetNewsLinksOperationAsTask()
         {
             try
             {
-                return await Datahandler.GetNewsLinksByPage();
+                return await Datahandler.instance.GetNewsLinksByPage(0);
             }
             catch
             {
                 LoadingControlActueel.DisplayLoadingError(true);
-                return new List<NewsLink>();
+                return new List<INewsLink>();
             }
         }
 
@@ -102,7 +100,7 @@ namespace Powned
         {
             try
             {
-                return await Datahandler.GetHeadlines();
+                return await Datahandler.instance.GetHeadlines();
             }
             catch
             {
@@ -115,7 +113,7 @@ namespace Powned
         {
             try
             {
-                return await Datahandler.GetPopularNewsLinks();
+                return await Datahandler.instance.GetPopularNewsLinks();
             }
             catch
             {
@@ -125,6 +123,8 @@ namespace Powned
 
         public async Task LoadData()
         {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
             PopularTextblock.Visibility = Visibility.Collapsed;
             ActueelTextblock.Visibility = Visibility.Collapsed;
             LoadingControl.DisplayLoadingError(false);
@@ -136,7 +136,7 @@ namespace Powned
             ActueelListview.ItemsSource = null;
             PopularListview.ItemsSource = null;
 
-            Task<IList<NewsLink>> GetNewsLinksTask = GetNewsLinksOperationAsTask();
+            Task<IList<INewsLink>> GetNewsLinksTask = GetNewsLinksOperationAsTask();
             Task<IList<Headline>> GetHeadlinesTask = GetHeadlinesOperationAsTask();
             Task<IList<PopularHeadline>> GetPopularHeadlinesTask = GetPopularHeadlinesOperationAsTask();
 
@@ -162,6 +162,15 @@ namespace Powned
             {
                 localSettings.Values["LastNewsItem"] = Headlines.First().URL;
                 NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker", 30);
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                localSettings.Values["LastActualNewsItem"] = NewsLinks.First().URL;
             }
             catch
             {
@@ -223,7 +232,7 @@ namespace Powned
 
             try
             {
-                SearchListView.ItemsSource = await Datahandler.Search(SearchTextbox.Text);
+                SearchListView.ItemsSource = await Datahandler.instance.Search(SearchTextbox.Text);
             }
             catch
             {

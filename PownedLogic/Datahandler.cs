@@ -5,64 +5,79 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
 using Windows.Foundation;
+using WRCHelperLibrary;
 
 namespace PownedLogic
 {
-    public static class Datahandler
+    public sealed class Datahandler : IDataHandler
     {
-        public static IAsyncOperation<IList<NewsLink>> GetNewsLinksByPage()
+        private static readonly Datahandler _instance = new Datahandler();
+        public static Datahandler instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
+        private Datahandler()
+        {
+
+        }
+
+        public IAsyncOperation<IList<INewsLink>> GetNewsLinksByPage(int PageID)
         {
             return GetNewsLinksByPageHelper().AsAsyncOperation();
         }
 
-        private static async Task<IList<NewsLink>> GetNewsLinksByPageHelper()
+        private async Task<IList<INewsLink>> GetNewsLinksByPageHelper()
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
             return NewsLinkParser.GetNewsLinksFromSource(PageSource);
         }
 
-        public static IAsyncOperation<IList<Headline>> GetHeadlines()
+        public IAsyncOperation<IList<Headline>> GetHeadlines()
         {
             return GetHeadlinesHelper().AsAsyncOperation();
         }
 
-        private static async Task<IList<Headline>> GetHeadlinesHelper()
+        private async Task<IList<Headline>> GetHeadlinesHelper()
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
 
             return HeadlinesParser.GetHeadlinesFromSource(PageSource);
         }
 
-        public static IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()
+        public IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()
         {
             return GetPopularNewsLinksHelper().AsAsyncOperation();
         }
 
-        private static async Task<IList<PopularHeadline>> GetPopularNewsLinksHelper()
+        private async Task<IList<PopularHeadline>> GetPopularNewsLinksHelper()
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
 
             return PopularHeadlinesParser.GetHeadlinesFromSource(PageSource);
         }
 
-        public static IAsyncOperation<IList<SearchResult>> Search(string Input)
+        public IAsyncOperation<IList<SearchResult>> Search(string Input)
         {
             return SearchHelper(Input).AsAsyncOperation();
         }
 
-        private static async Task<IList<SearchResult>> SearchHelper(string Input)
+        private async Task<IList<SearchResult>> SearchHelper(string Input)
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/fastsearch?query=" + Input + "&zoek=zoek", Encoding.GetEncoding("iso-8859-1"));
 
             return SearchResultParser.GetSearchResult(PageSource);
         }
 
-        public static IAsyncOperation<NewsItem> GetNewsPageFromURL(string URL)
+        public IAsyncOperation<INewsItem> GetNewsItemByURL(string URL)
         {
-            return GetNewsPageFromURLHelper(URL).AsAsyncOperation();
+            return GetNewsItemByURLHelper(URL).AsAsyncOperation();
         }
 
-        private static async Task<NewsItem> GetNewsPageFromURLHelper(string URL)
+        private async Task<INewsItem> GetNewsItemByURLHelper(string URL)
         {
             if (!URL.StartsWith("http://www.powned.tv"))
             {
@@ -75,7 +90,7 @@ namespace PownedLogic
             return NewsItemParser.GetNewsItemFromSource(PageSource);
         }
 
-        internal static async Task PostAppStatsHelper(string URL)
+        internal async Task PostAppStatsHelper(string URL)
         {
             await HTTPGetUtil.GetDataAsStringFromURL("http://speedydown-001-site2.smarterasp.net/api.ashx?Powned=" + URL);
         }

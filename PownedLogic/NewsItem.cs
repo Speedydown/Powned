@@ -69,18 +69,23 @@ namespace PownedLogic
 
         public IList<Comment> Comments { get; private set; }
 
-        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments)
+        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, string Image)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
             this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
             this.Body = ArticleContent;
             this.Added = Date;
             this.Author = AuthorDate;
+
+            //if (Image.Length > 0)
+            //{
+            //    this.YoutubeURL = new Uri(Image);
+            //}
+
             this.ImageList = new string[] { }.ToList();
             this.Comments = Comments;
             this.TimeStamp = "";
             this.Updated = "";
-            this.YoutubeURL = null;
             this.MediaFile = null;
         }
     }

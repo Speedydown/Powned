@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WRCHelperLibrary;
 
 namespace Powned
 {
@@ -74,7 +75,7 @@ namespace Powned
                 if (e.NavigationParameter != null)
                 {
                     CurrentURL = (string)e.NavigationParameter;
-                    NewsItem newsItem = await Datahandler.GetNewsPageFromURL(e.NavigationParameter.ToString());
+                    NewsItem newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
                     this.DataContext = newsItem;
 
                     if (newsItem.Comments.Count > 0)

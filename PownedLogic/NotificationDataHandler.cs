@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using WRCHelperLibrary;
 
 namespace PownedLogic
 {
@@ -34,7 +35,8 @@ namespace PownedLogic
                     return NewNewsLinks;
                 }
 
-                IList<Headline> News = await Datahandler.GetHeadlines();
+                //Headlines
+                IList<Headline> News = await Datahandler.instance.GetHeadlines();
                 int NotificationCounter = 0;
 
                 //Test Code
@@ -44,11 +46,45 @@ namespace PownedLogic
                 {
                     if (h.URL == LastURL)
                     {
-                        return NewNewsLinks;
+                        break;
+                    }
+
+                    if (localSettings.Values["Notificaties headlines"] != null && Convert.ToBoolean(localSettings.Values["Notificaties headlines"]))
+                    {
+                        NotificationHandler.CreateNotification(h.Title, h.HashTag, h.URL);
+                        await Task.Delay(1000);
                     }
 
                     NewNewsLinks.Add(new NewsLink(h.Title, h.HashTag, h.URL));
                     NotificationCounter++;
+                }
+
+
+                //Actual news notifications
+                string LastActualNews = localSettings.Values["LastActualNewsItem"] != null ? localSettings.Values["LastActualNewsItem"].ToString() : string.Empty;
+
+                if (LastActualNews != string.Empty && localSettings.Values["Notificaties actueel"] != null && Convert.ToBoolean(localSettings.Values["Notificaties actueel"]))
+                {
+                    IList<INewsLink> ActualNews = await Datahandler.instance.GetNewsLinksByPage(0);
+
+                    //Test code
+                    //LastActualNews = ActualNews[3].URL;
+
+                    if (LastActualNews != string.Empty)
+                    {
+                        foreach (NewsLink l in ActualNews)
+                        {
+                            if (l.URL == LastActualNews)
+                            {
+                                break;
+                            }
+
+                            NotificationHandler.CreateNotification(l.Title, string.Empty, l.URL);
+                            await Task.Delay(1000);
+                        }
+
+                    }
+
                 }
             }
             catch (Exception)
@@ -56,8 +92,9 @@ namespace PownedLogic
 
             }
 
-            return new List<NewsLink>();
+            return NewNewsLinks;
         }
+
 
     }
 }

@@ -27,7 +27,7 @@ namespace Powned
         {
             this.InitializeComponent();
 
-            Datahandler.GetNewsLinksByPage();
+            Datahandler.instance.GetNewsLinksByPage(0);
         }
     }
 }

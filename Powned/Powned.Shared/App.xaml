@@ -27,5 +27,12 @@
         <SolidColorBrush x:Key="PivotHeaderForegroundSelectedBrush" Color="White" />
         <SolidColorBrush x:Key="PivotHeaderForegroundUnselectedBrush" Color="LightGray" />
 
+
+        <!--ToggleSwitch-->
+        <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="ToggleSwitchOuterBorderBorderThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="ToggleSwitchThumbBorderThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="ToggleSwitchThumbBackgroundThemeBrush" Color="#FFFFFFFF" />
+
     </Application.Resources>
 </Application>
