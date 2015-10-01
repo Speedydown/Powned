@@ -36,11 +36,11 @@ namespace PownedLogic
                 }
 
                 //Headlines
-                IList<Headline> News = await Datahandler.instance.GetHeadlines();
+                IList<Headline> News = (await Datahandler.instance.GetHeadlines());
                 int NotificationCounter = 0;
 
                 //Test Code
-                //LastURL = News[3].URL;
+                //LastURL = News[1].URL;
 
                 foreach (Headline h in News)
                 {
@@ -49,15 +49,38 @@ namespace PownedLogic
                         break;
                     }
 
-                    if (localSettings.Values["Notificaties headlines"] != null && Convert.ToBoolean(localSettings.Values["Notificaties headlines"]))
-                    {
-                        NotificationHandler.CreateNotification(h.Title, h.HashTag, h.URL);
-                        await Task.Delay(1000);
-                    }
-
                     NewNewsLinks.Add(new NewsLink(h.Title, h.HashTag, h.URL));
                     NotificationCounter++;
                 }
+
+                string LastNotificationHeadlines = string.Empty;
+
+                if (localSettings.Values["LastNotificationHeadlines"] == null)
+                {
+                    localSettings.Values["LastNotificationHeadlines"] = News.First().URL;
+                }
+
+                LastNotificationHeadlines = localSettings.Values["LastNotificationHeadlines"].ToString();
+                localSettings.Values["LastNotificationHeadlines"] = News.First().URL;
+
+                int Counter = 0;
+
+                foreach (Headline h in News)
+                {
+                    if (localSettings.Values["Notificaties headlines"] != null && Convert.ToBoolean(localSettings.Values["Notificaties headlines"]) && h.URL != LastNotificationHeadlines && Counter < 3)
+                    {
+                        NotificationHandler.CreateNotification(h.Title, h.HashTag, h.URL);
+                        Counter++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+
+
+
 
 
                 //Actual news notifications
@@ -65,24 +88,26 @@ namespace PownedLogic
 
                 if (LastActualNews != string.Empty && localSettings.Values["Notificaties actueel"] != null && Convert.ToBoolean(localSettings.Values["Notificaties actueel"]))
                 {
-                    IList<INewsLink> ActualNews = await Datahandler.instance.GetNewsLinksByPage(0);
+                    IList<INewsLink> ActualNews = (await Datahandler.instance.GetNewsLinksByPage(0));
 
                     //Test code
                     //LastActualNews = ActualNews[3].URL;
+                    localSettings.Values["LastActualNewsItem"] = ActualNews.First().URL; 
 
                     if (LastActualNews != string.Empty)
                     {
+                        Counter = 0;
+
                         foreach (NewsLink l in ActualNews)
                         {
-                            if (l.URL == LastActualNews)
+                            if (l.URL == LastActualNews || Counter > 2)
                             {
                                 break;
                             }
 
                             NotificationHandler.CreateNotification(l.Title, string.Empty, l.URL);
-                            await Task.Delay(1000);
+                            Counter++;
                         }
-
                     }
 
                 }

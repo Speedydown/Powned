@@ -176,6 +176,15 @@ namespace Powned
             {
 
             }
+
+            try
+            {
+                localSettings.Values["LastNotificationHeadlines"] = Headlines.First().URL;
+            }
+            catch
+            {
+
+            }
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
