@@ -26,6 +26,8 @@ namespace Powned
 {
     public sealed partial class MainPage : Page
     {
+        private static string LastParameter { get; set; }
+
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private static IList<INewsLink> NewsLinks = null;
@@ -64,15 +66,20 @@ namespace Powned
         {
             StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
 
+            ToastNotificationManager.History.Clear();
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+
             if (NewsLinks == null || DateTime.Now.Subtract(TimeLoaded).TotalMinutes > 5)
             {
                 await LoadData();
             }
 
-            if (e.NavigationParameter != null && e.NavigationParameter.ToString() != "")
+            if (!string.IsNullOrEmpty(e.NavigationParameter.ToString()) && (string.IsNullOrEmpty(LastParameter) || LastParameter != e.NavigationParameter.ToString()))
             {
                 try
                 {
+                    LastParameter = e.NavigationParameter.ToString();
                     Frame.Navigate(typeof(ItemPage), (e.NavigationParameter));
                     return;
                 }
@@ -123,8 +130,6 @@ namespace Powned
 
         public async Task LoadData()
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
             PopularTextblock.Visibility = Visibility.Collapsed;
             ActueelTextblock.Visibility = Visibility.Collapsed;
             LoadingControl.DisplayLoadingError(false);

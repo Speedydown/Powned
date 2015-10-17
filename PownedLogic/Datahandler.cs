@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
@@ -43,7 +45,6 @@ namespace PownedLogic
 
         private async Task<IList<Headline>> GetHeadlinesHelper()
         {
-            await Login("speedy@speedydown.nl", "smartlink");
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
             return HeadlinesParser.GetHeadlinesFromSource(PageSource);
         }
@@ -87,7 +88,7 @@ namespace PownedLogic
             Task PostAppStats = Task.Run(() => PostAppStatsHelper(URL));
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(URL, Encoding.GetEncoding("iso-8859-1"));
 
-            return NewsItemParser.GetNewsItemFromSource(PageSource);
+            return await NewsItemParser.GetNewsItemFromSource(PageSource);
         }
 
         internal async Task PostAppStatsHelper(string URL)
@@ -104,11 +105,18 @@ namespace PownedLogic
         {
             string LoginURL = "http://registratie.geenstijl.nl/registratie/?view=login";
             string LoginPostUrl = "http://registratie.geenstijl.nl/registratie/gs_engine.php?action=login";
+            string CookieSync = "http://www.steylloos.nl/cookiesync.php?site=POW2&return=aHR0cDovL3d3dy5wb3duZWQudHYv";
 
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
 
             Dictionary<string, string> ValueDictionary = LoginHandler.GetLoginFormFields(PageSource, Email, Password);
-            bool Result = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
+
+            HttpResponseMessage response = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
+
+            if (response.StatusCode == HttpStatusCode.OK && !(await response.Content.ReadAsStringAsync()).Contains("mislukt"))
+            {
+                await HTTPGetUtil.GetDataAsStringFromURL(CookieSync, Encoding.GetEncoding("iso-8859-1"));
+            }
         }
     }
 }

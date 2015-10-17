@@ -74,6 +74,7 @@ namespace Powned
 
                 if (e.NavigationParameter != null)
                 {
+                    NewsItemControl.DisableFullScreen = true;
                     CurrentURL = (string)e.NavigationParameter;
                     NewsItem newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
                     this.DataContext = newsItem;

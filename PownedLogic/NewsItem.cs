@@ -69,7 +69,7 @@ namespace PownedLogic
 
         public IList<Comment> Comments { get; private set; }
 
-        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, string Image)
+        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
             this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
@@ -82,7 +82,7 @@ namespace PownedLogic
             //    this.YoutubeURL = new Uri(Image);
             //}
 
-            this.ImageList = new string[] { }.ToList();
+            this.ImageList = Images;
             this.Comments = Comments;
             this.TimeStamp = "";
             this.Updated = "";

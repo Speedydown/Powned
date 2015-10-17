@@ -10,7 +10,7 @@ namespace PownedLogic
 {
     public static class NewsItemParser
     {
-        public static NewsItem GetNewsItemFromSource(string Source)
+        internal static async Task<NewsItem> GetNewsItemFromSource(string Source)
         {
             string SourceBackupForTwitterImage = Source;
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
@@ -45,11 +45,11 @@ namespace PownedLogic
 
             string image = string.Empty;
 
-            if (SourceBackupForTwitterImage.Contains("pic.twitter.com"))
-            {
-                SourceBackupForTwitterImage = SourceBackupForTwitterImage.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", SourceBackupForTwitterImage, false));
-                image = "http://pic.twitter.com" + HTMLParserUtil.GetContentAndSubstringInput("pic.twitter.com", "</a>", SourceBackupForTwitterImage, out SourceBackupForTwitterImage);
-            }
+            //if (SourceBackupForTwitterImage.Contains("pic.twitter.com"))
+            //{
+            //    SourceBackupForTwitterImage = SourceBackupForTwitterImage.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", SourceBackupForTwitterImage, false));
+            //    image = "http://pic.twitter.com" + HTMLParserUtil.GetContentAndSubstringInput("pic.twitter.com", "</a>", SourceBackupForTwitterImage, out SourceBackupForTwitterImage);
+            //}
 
             string AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
 
@@ -84,7 +84,7 @@ namespace PownedLogic
 
                             Content = Content.Substring(0, Content.Length - 1);
                             Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-                                
+
                             string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
 
                             Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
@@ -101,7 +101,44 @@ namespace PownedLogic
                 }
             }
 
-            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, Comments, image);
+            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, Comments, await GetImagesFromSource(SourceBackupForTwitterImage));
+        }
+
+        private static async Task<List<string>> GetImagesFromSource(string Source)
+        {
+            List<string> Images = new List<string>();
+
+            while (true)
+            {
+                try
+                {
+                    //GetTwitterURL's
+                    string TwitterHTMLL = HTMLParserUtil.GetContentAndSubstringInput("<blockquote class=\"", "</blockquote>", Source, out Source);
+                    TwitterHTMLL = TwitterHTMLL.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", TwitterHTMLL, false));
+                    TwitterHTMLL = TwitterHTMLL.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("</a>", TwitterHTMLL, false));
+
+                    Images.Add(await GetPicture("http://" + TwitterHTMLL));
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            return Images;
+        }
+
+
+        private static async Task<string> GetPicture(string twitterUri)
+        {
+            string html = await HTTPGetUtil.GetDataAsStringFromURL(twitterUri);
+
+            int imgIndex = html.IndexOf("<a class=\"media media-thumbnail twitter-timeline-link is-preview \" data-url=");
+            int srcStartIndex = html.IndexOf("src=\"", imgIndex) + 5;
+            int srcEndIndex = html.IndexOf("\" alt=\"", srcStartIndex);
+            string Image = html.Substring(srcStartIndex, srcEndIndex - srcStartIndex);
+
+            return Image.StartsWith("http") ? Image : null;
         }
     }
 }

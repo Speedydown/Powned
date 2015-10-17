@@ -63,6 +63,8 @@ namespace PownedLogic
                 LastNotificationHeadlines = localSettings.Values["LastNotificationHeadlines"].ToString();
                 localSettings.Values["LastNotificationHeadlines"] = News.First().URL;
 
+                //LastNotificationHeadlines = News[1].URL;
+
                 int Counter = 0;
 
                 foreach (Headline h in News)
