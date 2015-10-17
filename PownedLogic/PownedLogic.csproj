@@ -52,6 +52,7 @@
     <Compile Include="Datahandler.cs" />
     <Compile Include="Headline.cs" />
     <Compile Include="HeadlinesParser.cs" />
+    <Compile Include="LoginHandler.cs" />
     <Compile Include="NewsItem.cs" />
     <Compile Include="NewsItemParser.cs" />
     <Compile Include="NewsLink.cs" />

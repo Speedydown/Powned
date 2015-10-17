@@ -43,8 +43,8 @@ namespace PownedLogic
 
         private async Task<IList<Headline>> GetHeadlinesHelper()
         {
+            await Login("speedy@speedydown.nl", "smartlink");
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
-
             return HeadlinesParser.GetHeadlinesFromSource(PageSource);
         }
 
@@ -93,6 +93,22 @@ namespace PownedLogic
         internal async Task PostAppStatsHelper(string URL)
         {
             await HTTPGetUtil.GetDataAsStringFromURL("http://speedydown-001-site2.smarterasp.net/api.ashx?Powned=" + URL);
+        }
+
+        public IAsyncAction Login(string Email, string Password)
+        {
+            return LoginHelper(Email, Password).AsAsyncAction();
+        }
+
+        private async Task LoginHelper(string Email, string Password)
+        {
+            string LoginURL = "http://registratie.geenstijl.nl/registratie/?view=login";
+            string LoginPostUrl = "http://registratie.geenstijl.nl/registratie/gs_engine.php?action=login";
+
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
+
+            Dictionary<string, string> ValueDictionary = LoginHandler.GetLoginFormFields(PageSource, Email, Password);
+            bool Result = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
         }
     }
 }
