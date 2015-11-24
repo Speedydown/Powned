@@ -77,6 +77,7 @@ namespace Powned
                     NewsItemControl.DisableFullScreen = true;
                     CurrentURL = (string)e.NavigationParameter;
                     NewsItem newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
+                    LoadingControl.SetLoadingStatus(false);
                     this.DataContext = newsItem;
 
                     if (newsItem.Comments.Count > 0)
@@ -99,6 +100,7 @@ namespace Powned
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            this.DataContext = null;
         }
 
         #region NavigationHelper registration

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
@@ -65,12 +66,12 @@ namespace PownedLogic
 
         public Visibility DisplayWebView
         {
-            get { return Visibility.Collapsed; }
+            get { return YoutubeURL != null ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public IList<Comment> Comments { get; private set; }
 
-        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images)
+        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
             this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
@@ -78,10 +79,8 @@ namespace PownedLogic
             this.Added = Date;
             this.Author = AuthorDate;
 
-            //if (Image.Length > 0)
-            //{
-            //    this.YoutubeURL = new Uri(Image);
-            //}
+            if (Youtube != null && Youtube.Length > 0)
+            this.YoutubeURL = new Uri(Youtube);
 
             this.ImageList = Images;
             this.Comments = Comments;
@@ -104,6 +103,13 @@ namespace PownedLogic
             {
                 this.Content = this.Content.Substring(0, this.Content.Length - 1);
             }
+
+            if (this.Content.Contains("#"))
+            {
+                this.Content = WebUtility.HtmlDecode(this.Content);
+            }
+
+            this.Content = HTMLParserUtil.CleanHTMLTagsFromString(this.Content);
 
             this.AuthorDateTime = AuthorDateTIme;
         }

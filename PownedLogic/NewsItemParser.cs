@@ -25,17 +25,18 @@ namespace PownedLogic
             string Summary = string.Empty;
             List<string> ArticleContent = new List<string>();
             string AuthorDate = string.Empty;
+            string YoutubeURL = null;
 
             Task NewsItemTask = Task.Run(() =>
                 {
 
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
 
+                    YoutubeURL = GetYouTubeURL(Source);
                     Date = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"articledate\">", "/p><br />", Source, out Source, "", true);
                     Title = HTMLParserUtil.GetContentAndSubstringInput("<h1>", "</h1><br />", Source, out Source, "", true);
                     Hashtag = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"hashtag\">", "</p>", Source, out Source, "", true);
                     ArticleImage = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" alt=", Source, out Source, "", true);
-
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-intro\">", Source, true));
 
                     Summary = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", Source, out Source, "", true);
@@ -59,12 +60,6 @@ namespace PownedLogic
 
                     string image = string.Empty;
 
-                    //if (SourceBackupForTwitterImage.Contains("pic.twitter.com"))
-                    //{
-                    //    SourceBackupForTwitterImage = SourceBackupForTwitterImage.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", SourceBackupForTwitterImage, false));
-                    //    image = "http://pic.twitter.com" + HTMLParserUtil.GetContentAndSubstringInput("pic.twitter.com", "</a>", SourceBackupForTwitterImage, out SourceBackupForTwitterImage);
-                    //}
-
                     AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
 
                 });
@@ -78,7 +73,22 @@ namespace PownedLogic
 
             await NewsItemTask;
 
-            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images);
+            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL);
+        }
+
+        private static string GetYouTubeURL(string Source)
+        {
+            try
+            {
+                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("https://www.youtube.com/embed/", Source, false));
+                string YoutubeID = HTMLParserUtil.GetContentAndSubstringInput("https://www.youtube.com/embed/", "\"", Source, out Source, "", true);
+
+                return "https://www.youtube.com/embed/" + YoutubeID;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static async Task<List<Comment>> GetCommentsFromSource(string Source)
