@@ -15,8 +15,12 @@ namespace PownedLogic
 {
     public static class NewsItemParser
     {
+        private static readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
         internal static async Task<NewsItem> GetNewsItemFromSource(string Source)
         {
+            bool GetMediaContent = localSettings.Values["Media weergeven"] != null && Convert.ToBoolean(localSettings.Values["Media weergeven"]);
+
             string SourceBackupForTwitterImage = Source;
             string Date = string.Empty;
             string Title = string.Empty;
@@ -68,8 +72,16 @@ namespace PownedLogic
             ObservableCollection<string> Images = new ObservableCollection<string>();
 
             Task<List<Comment>> CommentsTask = Task.Run(() => GetCommentsFromSource(SourceBackupForTwitterImage));
-            Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
-            Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
+
+            if (GetMediaContent)
+            {
+                Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
+                Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
+            }
+            else
+            {
+                YoutubeURL = null;
+            }
 
             await NewsItemTask;
 
@@ -101,43 +113,59 @@ namespace PownedLogic
                 {
                     string CommentHTML = HTMLParserUtil.GetContentAndSubstringInput("<div id=\"comments\">", "<div id=\"reageerhier\">", Source, out Source, "", true);
 
+
+                    int HalfOFCommentsIndex = CommentHTML.IndexOf("<div class=\"comment\"", CommentHTML.Length / 2);
+
+                    Task<List<Comment>> FirstHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(0, HalfOFCommentsIndex)));
+                    Task<List<Comment>> SecondHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(HalfOFCommentsIndex)));
+
+                    Comments.AddRange(await FirstHalf);
+                    Comments.AddRange(await SecondHalf);
+                }
+                catch
+                {
+
+                }
+            }
+
+            return Comments;
+        }
+
+        private async static Task<List<Comment>> CommentsParser(string CommentHTML)
+        {
+            List<Comment> Comments = new List<Comment>();
+
+            while (true)
+            {
+                try
+                {
+                    CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
+                    string Content = string.Empty;
+
+                    string ThisCommentHTML = CommentHTML.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<p class=\"footer\">", CommentHTML, false));
+
                     while (true)
                     {
                         try
                         {
-                            CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
-                            string Content = string.Empty;
-
-                            string ThisCommentHTML = CommentHTML.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<p class=\"footer\">", CommentHTML, false));
-
-                            while (true)
-                            {
-                                try
-                                {
-                                    Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
-                                }
-                                catch
-                                {
-                                    break;
-                                }
-                            }
-
-                            Content = Content.Substring(0, Content.Length - 1);
-                            Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-
-                            string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
-
-                            Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
+                            Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
                         }
                         catch
                         {
                             break;
                         }
                     }
+
+                    Content = Content.Substring(0, Content.Length - 1);
+                    Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
+
+                    string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
+
+                    Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
                 }
                 catch
                 {
-
+                    break;
                 }
             }
 

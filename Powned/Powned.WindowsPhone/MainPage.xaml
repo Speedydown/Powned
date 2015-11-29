@@ -26,13 +26,13 @@
         </Grid.ChildrenTransitions>
 
         <Pivot x:Name="PownedPivot" Style="{StaticResource CustomPivotStyle}" SelectionChanged="PownedPivot_SelectionChanged">
-            <PivotItem x:Name="HeadlinesPI">
+            <PivotItem x:Name="HeadlinesPI" DataContext="{Binding headlinesViewModel}">
                 <PivotItem.Header>
-                    <TextBlock Text="Headlines" FontSize="21" FontWeight="Bold" Margin="0,5,0,0" />
+                    <TextBlock x:Uid="HeadlinesHeader" Style="{StaticResource PivotHeaderStyle}" />
                 </PivotItem.Header>
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="2.5,2.5">
-                        <ListView x:Name="HeadlinesListview" ItemTemplate="{StaticResource PownedHeadlines}" IsItemClickEnabled="True" ItemClick="HeadlinesListview_ItemClick">
+                        <ListView x:Name="HeadlinesListview" ItemsSource="{Binding Headlines}" ItemTemplate="{StaticResource PownedHeadlines}" IsItemClickEnabled="True" ItemClick="HeadlinesListview_ItemClick">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="2"/>
@@ -40,52 +40,49 @@
                             </ListView.ItemsPanel>
                         </ListView>
                     </ScrollViewer>
-                    <CLib:LoadingControl x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Bezig met het ophalen van de laatste headlines."/>
+                    <CLib:LoadingControl x:Uid="LoadingControl" x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                 </Grid>
             </PivotItem>
-            <PivotItem x:Name="LatestNieuwsPI">
+            <PivotItem x:Name="LatestNieuwsPI" DataContext="{Binding newsViewModel}">
                 <PivotItem.Header>
-                    <TextBlock Text="Actueel" FontSize="21" FontWeight="Bold" Margin="0,5,0,0" />
+                    <TextBlock x:Uid="LatestNewsHeader" Style="{StaticResource PivotHeaderStyle}" />
                 </PivotItem.Header>
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="2.5,2.5">
                         <StackPanel>
-                            <TextBlock x:Name="ActueelTextblock" Text="Actueel:"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-                            <ListView x:Name="ActueelListview" ItemTemplate="{StaticResource PownedActueel}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="ActueelListview_ItemClick"/>
-                            <TextBlock x:Name="PopularTextblock" Text="Populair:"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-                            <ListView x:Name="PopularListview" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
+                            <TextBlock x:Uid="ActueelTextblock" x:Name="ActueelTextblock" Visibility="{Binding HeadersVisibility}" Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                            <ListView x:Name="ActueelListview" ItemsSource="{Binding NewsLinks}" ItemTemplate="{StaticResource PownedActueel}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="ActueelListview_ItemClick"/>
+                            <TextBlock x:Uid="PopularTextblock" x:Name="PopularTextblock" Visibility="{Binding HeadersVisibility}"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                            <ListView x:Name="PopularListview" ItemsSource="{Binding PopularHeadlines}" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
                         </StackPanel>
                     </ScrollViewer>
-                    <CLib:LoadingControl x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Bezig met het ophalen van de laatste actuele nieuwsitems."/>
+                    <CLib:LoadingControl x:Uid="LoadingControlActueel" x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                 </Grid>
             </PivotItem>
-            <PivotItem x:Name="ZoekenPI">
+            <PivotItem x:Name="ZoekenPI" DataContext="{Binding searchViewModel}">
                 <PivotItem.Header>
-                    <TextBlock Text="Zoeken" FontSize="21" FontWeight="Bold" Margin="0,5,0,0" />
+                    <TextBlock x:Uid="SearchHeader" Style="{StaticResource PivotHeaderStyle}" />
                 </PivotItem.Header>
                 <Grid Margin="-20, -23, -20, 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBox x:Name="SearchTextbox" IsEnabled="True" Grid.Row="0" Margin="4,5,4.5,5" PlaceholderText="Vul hier uw zoekterm in" KeyDown="SearchTextbox_KeyDown"/>
+                    <TextBox x:Uid="SearchTextbox" x:Name="SearchTextbox" Text="{Binding SearchQuery, Mode=TwoWay}" IsEnabled="True" Grid.Row="0" Margin="4,5,4.5,5" KeyDown="SearchTextbox_KeyDown"/>
                     <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto">
-                        <ListView x:Name="SearchListView" ItemTemplate="{StaticResource PownedSearch}" IsItemClickEnabled="True" ItemClick="SearchListView_ItemClick"/>
+                        <ListView x:Name="SearchListView" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource PownedSearch}" IsItemClickEnabled="True" ItemClick="SearchListView_ItemClick"/>
                     </ScrollViewer>
-                    <CLib:LoadingControl Grid.Row="1" x:Name="SearchLoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Bezig met zoeken"/>
+                    <CLib:LoadingControl Grid.Row="1" x:Uid="SearchLoadingControl" x:Name="SearchLoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                 </Grid>
             </PivotItem>
         </Pivot>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Foreground="White">
-            <AppBarButton x:Uid="SettingsButton" x:Name="SettingsButton" Label="Instellingen" Icon="Setting" Click="SettingsButton_Click"/>
-            <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Label="Website" Icon="World" Click="PownedButton_Click" />
-            <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Label="Vernieuwen" Icon="Refresh" Click="ReloadButton_Click" />
-            <AppBarButton x:Uid="SearchButton" x:Name="SearchButton" Label="Zoeken" Visibility="Collapsed" Icon="Find" Click="SearchButton_Click" />
-            <CommandBar.SecondaryCommands>
-                <AppBarButton x:Uid="PrivacyPolicyButton" x:Name="PrivacyPolicyButton" Label="Privacy policy"  Click="PrivacyPolicyButton_Click"/>
-            </CommandBar.SecondaryCommands>
+            <AppBarButton x:Uid="SettingsButton" x:Name="SettingsButton" Icon="Setting" Click="SettingsButton_Click"/>
+            <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Icon="World" Click="PownedButton_Click" />
+            <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Icon="Refresh" Click="ReloadButton_Click" />
+            <AppBarButton x:Uid="SearchButton" x:Name="SearchButton" Visibility="Collapsed" Icon="Find" Click="SearchButton_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

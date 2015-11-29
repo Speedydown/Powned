@@ -6,6 +6,12 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     </Style>
 
+    <Style x:Key="PivotHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="21" />
+        <Setter Property="Margin" Value="0,5,0,0" />
+    </Style>
+
     <DataTemplate x:Key="PownedHeadlines">
         <Grid>
             <Grid.RowDefinitions>

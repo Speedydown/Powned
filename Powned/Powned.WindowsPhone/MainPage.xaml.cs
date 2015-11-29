@@ -1,5 +1,6 @@
 ﻿using Powned.Common;
 using PownedLogic;
+using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,16 +27,9 @@ namespace Powned
 {
     public sealed partial class MainPage : Page
     {
-        private static string LastParameter { get; set; }
-
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        private static IList<INewsLink> NewsLinks = null;
-        private static IList<Headline> Headlines = null;
-        private static IList<PopularHeadline> PopularHeadlines = null;
         public static MainPage instance = null;
-
-        public static DateTime TimeLoaded = DateTime.Now.AddDays(-1);
 
         public MainPage()
         {
@@ -59,137 +53,29 @@ namespace Powned
 
         public static void ClearCachedData()
         {
-            TimeLoaded = DateTime.Now.AddDays(-1);
+            NewsViewModel.instance.ClearCachedData();
+            HeadlinesViewModel.instance.ClearCachedData();
+
+            Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(instance.LoadingControl));
+            Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(instance.LoadingControlActueel));
         }
 
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
+            this.DataContext = MainpageViewModel.instance;
+            SearchViewModel.instance.SetLoadingControl(SearchLoadingControl);
 
+            //WindowsPhone only functions
+            StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
             ToastNotificationManager.History.Clear();
+
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
 
-            if (NewsLinks == null || DateTime.Now.Subtract(TimeLoaded).TotalMinutes > 5)
-            {
-                await LoadData();
-            }
+            
 
-            if (!string.IsNullOrEmpty(e.NavigationParameter.ToString()) && (string.IsNullOrEmpty(LastParameter) || LastParameter != e.NavigationParameter.ToString()))
-            {
-                try
-                {
-                    LastParameter = e.NavigationParameter.ToString();
-                    Frame.Navigate(typeof(ItemPage), (e.NavigationParameter));
-                    return;
-                }
-                catch
-                {
-
-                }
-            }
-        }
-
-        private async Task<IList<INewsLink>> GetNewsLinksOperationAsTask()
-        {
-            try
-            {
-                return await Datahandler.instance.GetNewsLinksByPage(0);
-            }
-            catch
-            {
-                LoadingControlActueel.DisplayLoadingError(true);
-                return new List<INewsLink>();
-            }
-        }
-
-        private async Task<IList<Headline>> GetHeadlinesOperationAsTask()
-        {
-            try
-            {
-                return await Datahandler.instance.GetHeadlines();
-            }
-            catch
-            {
-                LoadingControl.DisplayLoadingError(true);
-                return new List<Headline>();
-            }
-        }
-
-        private async Task<IList<PopularHeadline>> GetPopularHeadlinesOperationAsTask()
-        {
-            try
-            {
-                return await Datahandler.instance.GetPopularNewsLinks();
-            }
-            catch
-            {
-                return new List<PopularHeadline>();
-            }
-        }
-
-        public async Task LoadData()
-        {
-            PopularTextblock.Visibility = Visibility.Collapsed;
-            ActueelTextblock.Visibility = Visibility.Collapsed;
-            LoadingControl.DisplayLoadingError(false);
-            LoadingControlActueel.DisplayLoadingError(false);
-            LoadingControl.SetLoadingStatus(true);
-            LoadingControlActueel.SetLoadingStatus(true);
-            SearchLoadingControl.SetLoadingStatus(false);
-            HeadlinesListview.ItemsSource = null;
-            ActueelListview.ItemsSource = null;
-            PopularListview.ItemsSource = null;
-
-            Task<IList<INewsLink>> GetNewsLinksTask = GetNewsLinksOperationAsTask();
-            Task<IList<Headline>> GetHeadlinesTask = GetHeadlinesOperationAsTask();
-            Task<IList<PopularHeadline>> GetPopularHeadlinesTask = GetPopularHeadlinesOperationAsTask();
-
-            Headlines = await GetHeadlinesTask;
-            LoadingControl.SetLoadingStatus(false);
-            HeadlinesListview.ItemsSource = Headlines;
-
-            NewsLinks = await GetNewsLinksTask;
-            ActueelListview.ItemsSource = NewsLinks;
-
-            PopularHeadlines = await GetPopularHeadlinesTask;
-            PopularListview.ItemsSource = PopularHeadlines;
-            PopularTextblock.Visibility = Visibility.Visible;
-            ActueelTextblock.Visibility = Visibility.Visible;
-            LoadingControlActueel.SetLoadingStatus(false);
-
-            TimeLoaded = DateTime.Now;
-
-            ApplicationData applicationData = ApplicationData.Current;
-            ApplicationDataContainer localSettings = applicationData.LocalSettings;
-
-            try
-            {
-                localSettings.Values["LastNewsItem"] = Headlines.First().URL;
-                NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker", 30);
-            }
-            catch
-            {
-
-            }
-
-            try
-            {
-                localSettings.Values["LastActualNewsItem"] = NewsLinks.First().URL;
-            }
-            catch
-            {
-
-            }
-
-            try
-            {
-                localSettings.Values["LastNotificationHeadlines"] = Headlines.First().URL;
-            }
-            catch
-            {
-
-            }
+            Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
+            Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -211,16 +97,9 @@ namespace Powned
 
         #endregion
 
-        private async void PrivacyPolicyButton_Click(object sender, RoutedEventArgs e)
+        private void ReloadButton_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("http://wiezitwaarvandaag.nl/privacypolicy.aspx"));
-        }
-
-        private async void ReloadButton_Click(object sender, RoutedEventArgs e)
-        {
-            await LoadData();
-
-            LoadingControl.SetLoadingStatus(false);
+            ClearCachedData();
         }
 
         private void SearchTextbox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -240,20 +119,7 @@ namespace Powned
 
         private async Task Search()
         {
-            SearchListView.ItemsSource = null;
-            SearchLoadingControl.DisplayLoadingError(false);
-            SearchLoadingControl.SetLoadingStatus(true);
-
-            try
-            {
-                SearchListView.ItemsSource = await Datahandler.instance.Search(SearchTextbox.Text);
-            }
-            catch
-            {
-                SearchLoadingControl.DisplayLoadingError(true);
-            }
-
-            SearchLoadingControl.SetLoadingStatus(false);
+            await Task.Run(() =>SearchViewModel.instance.Search());
         }
 
         private void PownedPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)

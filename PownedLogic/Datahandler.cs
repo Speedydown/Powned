@@ -46,7 +46,7 @@ namespace PownedLogic
         private async Task<IList<Headline>> GetHeadlinesHelper()
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
-            return HeadlinesParser.GetHeadlinesFromSource(PageSource);
+            return await HeadlinesParser.GetHeadlinesFromSource(PageSource);
         }
 
         public IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()

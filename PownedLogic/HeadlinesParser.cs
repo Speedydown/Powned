@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace PownedLogic
 {
     public static class HeadlinesParser
     {
-        public static IList<Headline> GetHeadlinesFromSource(string Source)
+        public static async Task<IList<Headline>> GetHeadlinesFromSource(string Source)
         {
             List<Headline> Headlines = new List<Headline>();
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<ul id=\"fpthumbs\">", Source, true));
@@ -42,7 +44,17 @@ namespace PownedLogic
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<span class=\"hashtag\">", Source, false));
                     string HashTag = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"hashtag\">", "</span>", Source, out Source, "", true);
 
-                    Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
+                    try
+                    {
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
+                        });
+                    }
+                    catch
+                    {
+                        Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
+                    }
                 }
                 catch
                 {

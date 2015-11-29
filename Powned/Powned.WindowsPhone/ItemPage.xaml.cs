@@ -52,7 +52,7 @@ namespace Powned
         {
             if (NewsItemControl.CanGoBack())
             {
-                NavigationHelper.GoBack();
+                Frame.Navigate(typeof(MainPage));
             }
         }
 

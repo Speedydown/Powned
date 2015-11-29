@@ -1,4 +1,5 @@
 ﻿using PownedLogic;
+using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +54,6 @@ namespace Powned
             if (MainPage.instance != null)
             {
                 MainPage.ClearCachedData();
-                Task t = MainPage.instance.LoadData();
             }
 #endif
 #if DEBUG
@@ -102,7 +102,30 @@ namespace Powned
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
+            }
 
+
+          
+
+            if (e.Arguments.Length > 0)
+            {
+                string ArticleURL = e.Arguments.ToString();
+
+                if (!string.IsNullOrEmpty(ArticleURL) && (string.IsNullOrEmpty(MainpageViewModel.instance.LastParameter) || MainpageViewModel.instance.LastParameter != ArticleURL))
+                {
+                    try
+                    {
+                        MainpageViewModel.instance.LastParameter = ArticleURL;
+                        rootFrame.Navigate(typeof(ItemPage), ArticleURL);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+            else
+            {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
@@ -111,6 +134,7 @@ namespace Powned
                     throw new Exception("Failed to create initial page");
                 }
             }
+
 
             // Ensure the current window is active
             Window.Current.Activate();

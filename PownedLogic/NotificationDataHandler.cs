@@ -63,7 +63,7 @@ namespace PownedLogic
                 LastNotificationHeadlines = localSettings.Values["LastNotificationHeadlines"].ToString();
                 localSettings.Values["LastNotificationHeadlines"] = News.First().URL;
 
-                //LastNotificationHeadlines = News[1].URL;
+                //LastNotificationHeadlines = News[5].URL;
 
                 int Counter = 0;
 
@@ -79,11 +79,6 @@ namespace PownedLogic
                         break;
                     }
                 }
-
-
-
-
-
 
                 //Actual news notifications
                 string LastActualNews = localSettings.Values["LastActualNewsItem"] != null ? localSettings.Values["LastActualNewsItem"].ToString() : string.Empty;
