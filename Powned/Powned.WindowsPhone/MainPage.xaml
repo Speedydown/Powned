@@ -83,6 +83,9 @@
             <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Icon="World" Click="PownedButton_Click" />
             <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Icon="Refresh" Click="ReloadButton_Click" />
             <AppBarButton x:Uid="SearchButton" x:Name="SearchButton" Visibility="Collapsed" Icon="Find" Click="SearchButton_Click" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Uid="PrivacyPolicyButton" x:Name="PrivacyPolicyButton" Label="Privacy policy"  Click="PrivacyPolicyButton_Click"/>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

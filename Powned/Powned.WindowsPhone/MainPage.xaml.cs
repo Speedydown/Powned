@@ -178,5 +178,11 @@ namespace Powned
         {
             Frame.Navigate(typeof(SettingsPage));
         }
+
+        private async void PrivacyPolicyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("http://www.powned.tv/docs/privacy.pdf"));
+        }
+
     }
 }
