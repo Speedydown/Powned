@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="Powned.PrivacyPolicy"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Powned"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="7,0">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <ScrollViewer VerticalScrollMode="Auto" ZoomMode="Disabled">
+            <StackPanel>
+                <TextBlock Margin="0,0,0,10" Style="{StaticResource HeaderTextBlockStyle}" Text="Privacy policy"/>
+                <TextBlock FontSize="20" Text="Algemeen" FontWeight="Bold"/>
+                <TextBlock FontSize="20" Text="Dit is de privacy policy van PowNed. PowNed is de verantwoordelijke voor de verwerking van persoonsgegevens die worden verzameld via deze app. Wij respecteren je privacy. PowNed kan deze privacy policy eenzijdig wijzigen. We adviseren je daarom om deze policy regelmatig op wijzigingen na te gaan." TextWrapping="WrapWholeWords"/>
+                <TextBlock FontSize="20" Margin="0,25,0,0" Text="Gegevensverstrekking aan derden" FontWeight="Bold"/>
+                <TextBlock FontSize="20" Text="Je gegevens zullen zonder jouw toestemming niet worden verstrekt aan derden, tenzij PowNed
+gehouden is bepaalde gegevens te verstrekken, bijvoorbeeld aan het Commissariaat voor de Media of
+aan opsporingsfunctionarissen. PowNed zal in zo'n geval uitsluitend gegevens verstrekken als duidelijk
+is dat het gaat om een gerechtvaardigd verzoek van degene aan wie de gegevens moeten worden
+verstrekt." TextWrapping="WrapWholeWords"/>
+                <TextBlock FontSize="20" FontWeight="Bold" Text="Beveiliging gegevens" Margin="0,25,0,0"/>
+                <TextBlock FontSize="20" Text="PowNed draagt er zorg voor dat de door haar geregistreerde persoonsgegevens vertrouwelijk en met
+de grootst mogelijke zorgvuldigheid worden behandeld. Alle persoonlijke gegevens zijn beveiligd
+opgeslagen in een database, die uitsluitend toegankelijk is voor personen voor wie dat uit hoofde van
+hun functie noodzakelijk is. PowNed spant zich verder naar redelijkheid in haar systemen te beveiligen
+tegen verlies en/of tegen enige vorm van onrechtmatig gebruik. PowNed is echter niet aansprakelijk
+voor verlies van gegevens, schade aan bestanden dan wel onrechtmatig verkregen toegang tot
+bestanden." TextWrapping="WrapWholeWords"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
