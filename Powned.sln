@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedBackgroundWP", "Powne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedLogic", "PownedLogic\PownedLogic.csproj", "{451944DD-82AE-4B4A-9DE7-571BE763B224}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLogic", "..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj", "{EE050C83-148E-4402-B25C-BC667D855965}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Powned\Powned.Shared\Powned.Shared.projitems*{9b5d774c-17e6-43ec-9ae7-2e3203a05f4b}*SharedItemsImports = 4
@@ -132,6 +134,20 @@ Global
 		{451944DD-82AE-4B4A-9DE7-571BE763B224}.Release|ARM.ActiveCfg = Release|Any CPU
 		{451944DD-82AE-4B4A-9DE7-571BE763B224}.Release|x64.ActiveCfg = Release|Any CPU
 		{451944DD-82AE-4B4A-9DE7-571BE763B224}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|ARM.Build.0 = Debug|ARM
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x86.ActiveCfg = Debug|x86
+		{EE050C83-148E-4402-B25C-BC667D855965}.Debug|x86.Build.0 = Debug|x86
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|ARM.ActiveCfg = Release|ARM
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|ARM.Build.0 = Release|ARM
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.ActiveCfg = Release|x86
+		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

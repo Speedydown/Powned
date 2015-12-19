@@ -38,6 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj">
+      <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
+      <Name>BaseLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Speedydown.nl-API\WebCrawlerTools\WebCrawlerTools.csproj">
       <Project>{ef41c761-8924-40f6-bc70-af1064796ed2}</Project>
       <Name>WebCrawlerTools</Name>
