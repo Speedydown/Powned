@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCrawlerTools", "..\Speed
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlControlLibrary", "..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj", "{09F3EFE7-AC3C-4189-90F1-C7BF9E01AF96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedBackgroundWP", "PownedBackgroundWP\PownedBackgroundWP.csproj", "{A0AF3EFB-81B7-4F69-BB8D-942899BB9D4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedBackground", "PownedBackgroundWP\PownedBackground.csproj", "{A0AF3EFB-81B7-4F69-BB8D-942899BB9D4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedLogic", "PownedLogic\PownedLogic.csproj", "{451944DD-82AE-4B4A-9DE7-571BE763B224}"
 EndProject

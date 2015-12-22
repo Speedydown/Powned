@@ -1,6 +1,5 @@
 ﻿using Powned.Common;
 using PownedLogic;
-using PownedLogic.Test;
 using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -75,17 +74,6 @@ namespace Powned
 
             Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
-        }
-
-        private void Test()
-        {
-            Test t = new Test(1, "Miriam", DateTime.Now);
-
-            TestDatabaseHandler instance = new TestDatabaseHandler();
-
-            instance.AddTestItem(t);
-
-            var items = instance.GetTestItems();
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -192,6 +180,11 @@ namespace Powned
         private void PrivacyPolicyButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(PrivacyPolicy));
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
 
     }

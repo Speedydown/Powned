@@ -35,21 +35,7 @@ namespace PownedLogic
 
         private async Task<IList<INewsLink>> GetNewsLinksByPageHelper()
         {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
-            return NewsLinkParser.GetNewsLinksFromSource(PageSource);
-        }
-
-        public IAsyncOperation<IList<Headline>> GetHeadlines()
-        {
-            return GetHeadlinesHelper().AsAsyncOperation();
-        }
-
-        private async Task<IList<Headline>> GetHeadlinesHelper()
-        {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
-            //return await HeadlinesParser.GetHeadlinesFromSource(PageSource);
-
-            return await HeadlinesDataHandler.instance.GetLatestHeadlines(PageSource, 30);
+            return await NewsLinksDataHandler.instance.GetNewsLinks();
         }
 
         public IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()

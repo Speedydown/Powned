@@ -1,5 +1,4 @@
 ﻿using PownedLogic;
-using PownedLogic.Test;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,13 +27,7 @@ namespace Powned
         {
             this.InitializeComponent();
 
-            Test t = new Test(1, "Miriam", DateTime.Now);
-
-            TestDatabaseHandler instance = new TestDatabaseHandler();
-
-            instance.AddTestItem(t);
-
-            var items = instance.GetTestItems();
+     
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using SQLiteTest;
+using SQLiteForWindows;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 

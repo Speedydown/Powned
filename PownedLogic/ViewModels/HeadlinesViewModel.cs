@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using PownedLogic.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,14 +31,14 @@ namespace PownedLogic.ViewModels
         {
             try
             {
-                return await Datahandler.instance.GetHeadlines();
+                return await HeadlinesDataHandler.instance.GetLatestHeadlines(true, 30);
             }
             catch
             {
-               CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    DisplayError = true;
-                });
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                 {
+                     DisplayError = true;
+                 });
 
                 return new List<Headline>();
             }
@@ -86,7 +87,7 @@ namespace PownedLogic.ViewModels
             try
             {
                 localSettings.Values["LastNewsItem"] = Headlines.First().URL;
-                NotificationHandler.Run("PownedBackgroundWP.BackgroundTask", "PownedBackgroundWorker", 30);
+                NotificationHandler.Run("PownedBackground.BackgroundTask", "PownedBackgroundWorker", 30);
             }
             catch
             {

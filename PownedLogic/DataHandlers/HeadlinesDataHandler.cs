@@ -16,18 +16,30 @@ namespace PownedLogic.DataHandlers
 
         private HeadlinesDataHandler() : base()
         {
-            base.CreateTable(typeof(Headline));
+            lock (locker)
+            {
+                int Result = base.CreateTable(typeof(Headline));
+            }
         }
 
-        public async Task<IList<Headline>> GetLatestHeadlines(string Source, int Limit = 30)
+        public List<Headline> GetNewHeadlines()
         {
-            foreach (Headline hl in GetItems<Headline>().Where(h => h.New))
-            {
-                hl.New = false;
-                base.Update(hl);
-            }
+            return GetItems<Headline>().Where(h => h.New == true).OrderByDescending(h => h.TimeStamp).ThenBy(h => h.InternalID).ToList();
+        }
 
-            List<Headline> HeadLines = (await Task.Run(() => GetHeadlinesFromSource(Source))) as List<Headline>;
+        public List<Headline> GetUnseenHeadlines()
+        {
+            return GetItems<Headline>().Where(h => h.Seen == false).OrderByDescending(h => h.TimeStamp).ThenBy(h => h.InternalID).ToList();
+        }
+
+        public async Task<IList<Headline>> GetLatestHeadlines(bool MarkHeadlinesAsSeen = false, int Limit = 30)
+        {
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
+            Task<IList<Headline>> NewHeadlinesTask = Task.Run(() => GetHeadlinesFromSource(PageSource));
+
+            MarkHeadlinesAsOld();
+
+            List<Headline> HeadLines = (await NewHeadlinesTask) as List<Headline>;
 
             foreach (Headline hl in HeadLines)
             {
@@ -35,23 +47,65 @@ namespace PownedLogic.DataHandlers
                     (h.Title == hl.Title && h.ImageURL == h.ImageURL)).Count() == 0)
                 {
                     hl.New = true;
+                    hl.Seen = false;
                     hl.TimeStamp = DateTime.Now;
-                    base.Insert(hl);
-                    System.Diagnostics.Debug.WriteLine("Adding " + hl.Title + " to localDB.");
+
+                    lock (locker)
+                    {
+                        base.Insert(hl);
+                    }
+
+                    System.Diagnostics.Debug.WriteLine("[Headline]Adding " + hl.Title + " to localDB.");
                 }
+            }
+
+            if (MarkHeadlinesAsSeen)
+            {
+                this.MarkHeadlinesAsSeen();
             }
 
             var HeadlinesFromDB = base.GetItems<Headline>().OrderByDescending(h => h.TimeStamp).ThenBy(h => h.InternalID).Take(Limit).ToList();
 
-            foreach (Headline hl in HeadlinesFromDB)
+            foreach (Headline h in HeadlinesFromDB)
             {
-                System.Diagnostics.Debug.WriteLine("Returning " + hl.Title + " with timestamp " + hl.TimeStamp.ToString("hh:mm:ss.fff tt") + " from localDB.");
+                System.Diagnostics.Debug.WriteLine("[Headline]" + h.Title + " " + h.TimeStamp + " " + h.InternalID);
+            }
+
+            if (HeadlinesFromDB == null)
+            {
+                return HeadLines;
             }
 
             return HeadlinesFromDB;
         }
 
-        private async Task<IList<Headline>> GetHeadlinesFromSource(string Source)
+        private void MarkHeadlinesAsOld()
+        {
+            foreach (Headline hl in GetItems<Headline>().Where(h => h.New))
+            {
+                hl.New = false;
+                lock (locker)
+                {
+                    base.Update(hl);
+                }
+                System.Diagnostics.Debug.WriteLine("[Headline]Marking " + hl.Title + " as old");
+            }
+        }
+
+        private void MarkHeadlinesAsSeen()
+        {
+            foreach (Headline h in GetItems<Headline>().Where(h => h.Seen == false))
+            {
+                h.Seen = true;
+                lock (locker)
+                {
+                    Update(h);
+                }
+                System.Diagnostics.Debug.WriteLine("[Headline]Marking " + h.Title + " as seen");
+            }
+        }
+
+        private IList<Headline> GetHeadlinesFromSource(string Source)
         {
             List<Headline> Headlines = new List<Headline>();
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<ul id=\"fpthumbs\">", Source, true));
@@ -84,17 +138,6 @@ namespace PownedLogic.DataHandlers
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<span class=\"hashtag\">", Source, false));
                     string HashTag = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"hashtag\">", "</span>", Source, out Source, "", true);
                     Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
-                    //try
-                    //{
-                    //    await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    //    {
-                    //        Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
-                    //    });
-                    //}
-                    //catch
-                    //{
-                    //    Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
-                    //}
                 }
                 catch
                 {

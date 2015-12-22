@@ -27,7 +27,7 @@
         <m3:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#FF0099" />
       </m3:VisualElements>
       <Extensions>
-        <Extension Category="windows.backgroundTasks" EntryPoint="PownedBackgroundWP.BackgroundTask">
+        <Extension Category="windows.backgroundTasks" EntryPoint="PownedBackground.BackgroundTask">
           <BackgroundTasks>
             <Task Type="timer" />
           </BackgroundTasks>

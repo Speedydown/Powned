@@ -100,9 +100,9 @@
       <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
       <Name>BaseLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\PownedBackgroundWP\PownedBackgroundWP.csproj">
+    <ProjectReference Include="..\..\PownedBackgroundWP\PownedBackground.csproj">
       <Project>{a0af3efb-81b7-4f69-bb8d-942899bb9d4e}</Project>
-      <Name>PownedBackgroundWP</Name>
+      <Name>PownedBackground</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\PownedLogic\PownedLogic.csproj">
       <Project>{451944dd-82ae-4b4a-9de7-571be763b224}</Project>
@@ -171,9 +171,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Community.CsharpSqlite.WinPhone">
-      <HintPath>..\..\..\..\Freed\SQLite\Community.CsharpSqlite.WinPhone\Bin\Debug\Community.CsharpSqlite.WinPhone.dll</HintPath>
-    </Reference>
     <Reference Include="SQLite-net">
       <HintPath>..\..\packages\sqlite-net-pcl.1.0.11\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10\SQLite-net.dll</HintPath>
     </Reference>

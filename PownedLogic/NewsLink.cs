@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BaseLogic.DataHandler;
+using SQLiteForWindows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +10,41 @@ using WRCHelperLibrary;
 
 namespace PownedLogic
 {
-    public sealed class NewsLink : INewsLink
+    public sealed class NewsLink : DataObject, INewsLink
     {
-        public string URL { get; private set; }
-        public string Title { get; private set; }
-        public string Content { get; private set; }
-        public string Time { get; private set; }
-        public string Catagory { get; private set; }
-        public string CommentCount { get; private set; }
+        public string URL { get; set; }
+        public string Title { get; set; }
+        public string Time { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public bool New { get; set; }
 
+        [Ignore]
         public string ImageURL
         {
             get { return string.Empty; }
+        }
+
+        [Ignore]
+        public string Content
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        [Ignore]
+        public string CommentCount
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        public NewsLink()
+        {
+
         }
 
         public NewsLink(string Title, string Time, string URL)
@@ -27,9 +52,6 @@ namespace PownedLogic
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title.Replace("\\", "")); ;
             this.Time = Time;
             this.URL = URL;
-            //this.Catagory = Catagory;
-            //this.Time = Date.Trim().Split(' ').Last();
-            //this.CommentCount = CommentCount;
         }
     }
 }
