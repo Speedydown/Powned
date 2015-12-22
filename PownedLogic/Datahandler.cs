@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PownedLogic.DataHandlers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -46,7 +47,9 @@ namespace PownedLogic
         private async Task<IList<Headline>> GetHeadlinesHelper()
         {
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
-            return await HeadlinesParser.GetHeadlinesFromSource(PageSource);
+            //return await HeadlinesParser.GetHeadlinesFromSource(PageSource);
+
+            return await HeadlinesDataHandler.instance.GetLatestHeadlines(PageSource, 30);
         }
 
         public IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()

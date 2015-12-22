@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Datahandler.cs" />
+    <Compile Include="DataHandlers\HeadlinesDataHandler.cs" />
     <Compile Include="Headline.cs" />
     <Compile Include="HeadlinesParser.cs" />
     <Compile Include="LoginHandler.cs" />
