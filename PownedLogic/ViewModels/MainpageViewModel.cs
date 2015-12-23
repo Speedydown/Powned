@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using PownedLogic.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace PownedLogic.ViewModels
         public HeadlinesViewModel headlinesViewModel { get; private set; }
         public NewsViewModel newsViewModel { get; private set; }
         public SearchViewModel searchViewModel { get; private set; }
+        public Task LoginTask { get; private set; }
 
         private MainpageViewModel()
         {
@@ -27,6 +29,16 @@ namespace PownedLogic.ViewModels
 
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+
+            LoginTask = Task.Run(async () =>
+                {
+                    LoginInfo loginInfo = LoginInfoDataHandler.instance.GetLoginInfo();
+
+                    if (!(loginInfo.UserName == string.Empty || loginInfo.Password == string.Empty))
+                    {
+                        await LoginInfoDataHandler.instance.Login(loginInfo);
+                    }
+                });
         }
     }
 }

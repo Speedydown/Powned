@@ -31,7 +31,7 @@ namespace PownedLogic.DataHandlers
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
             IList<INewsLink> NewslinksFromSource = GetNewsLinksFromSource(PageSource);
 
-            foreach (NewsLink nl in NewslinksFromSource)
+            foreach (NewsLink nl in NewslinksFromSource.Reverse())
             {
                 if (base.GetItems<NewsLink>().Where(n => n.URL == nl.URL ||
                     (n.Title == nl.Title && n.ImageURL == nl.ImageURL)).Count() == 0)
@@ -46,20 +46,7 @@ namespace PownedLogic.DataHandlers
                 }
             }
 
-            var NewsLinksFromDB = base.GetItems<NewsLink>().OrderByDescending(h => h.Time).Take(15).ToList();
-
-            await Task.Delay(2000);
-
-            foreach (NewsLink n in NewsLinksFromDB)
-            {
-                System.Diagnostics.Debug.WriteLine("[NewsLink]" + n.Title + " " + n.TimeStamp + " " + n.InternalID);
-            }
-
-            if (NewsLinksFromDB == null)
-            {
-                return NewslinksFromSource;
-            }
-
+            var NewsLinksFromDB = base.GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID).Take(15).ToList();
             return NewsLinksFromDB.Cast<INewsLink>().ToList();
         }
 

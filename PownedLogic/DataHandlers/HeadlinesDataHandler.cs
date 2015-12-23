@@ -41,6 +41,8 @@ namespace PownedLogic.DataHandlers
 
             List<Headline> HeadLines = (await NewHeadlinesTask) as List<Headline>;
 
+            HeadLines.Reverse();
+
             foreach (Headline hl in HeadLines)
             {
                 if (base.GetItems<Headline>().Where(h => h.URL == hl.URL || 
@@ -64,18 +66,7 @@ namespace PownedLogic.DataHandlers
                 this.MarkHeadlinesAsSeen();
             }
 
-            var HeadlinesFromDB = base.GetItems<Headline>().OrderByDescending(h => h.TimeStamp).ThenBy(h => h.InternalID).Take(Limit).ToList();
-
-            foreach (Headline h in HeadlinesFromDB)
-            {
-                System.Diagnostics.Debug.WriteLine("[Headline]" + h.Title + " " + h.TimeStamp + " " + h.InternalID);
-            }
-
-            if (HeadlinesFromDB == null)
-            {
-                return HeadLines;
-            }
-
+            var HeadlinesFromDB = base.GetItems<Headline>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID).Take(Limit).ToList();
             return HeadlinesFromDB;
         }
 

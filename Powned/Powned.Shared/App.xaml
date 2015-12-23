@@ -14,15 +14,15 @@
         <SolidColorBrush x:Key="TextBoxForegroundThemeBrush" Color="#FF0099" />
 
         <SolidColorBrush x:Key="ButtonBackgroundThemeBrush" Color="Transparent" />
-        <SolidColorBrush x:Key="ButtonBorderThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonBorderThemeBrush" Color="#FF0099" />
         <SolidColorBrush x:Key="ButtonDisabledBackgroundThemeBrush" Color="Transparent" />
         <SolidColorBrush x:Key="ButtonDisabledBorderThemeBrush" Color="Transparent" />
-        <SolidColorBrush x:Key="ButtonDisabledForegroundThemeBrush" Color="White" />
-        <SolidColorBrush x:Key="ButtonForegroundThemeBrush" Color="LightGray" />
+        <SolidColorBrush x:Key="ButtonDisabledForegroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="ButtonForegroundThemeBrush" Color="#FF0099" />
         <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="Transparent" />
-        <SolidColorBrush x:Key="ButtonPointerOverForegroundThemeBrush" Color="LightGray" />
+        <SolidColorBrush x:Key="ButtonPointerOverForegroundThemeBrush" Color="#FF0099" />
         <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="Transparent" />
-        <SolidColorBrush x:Key="ButtonPressedForegroundThemeBrush" Color="White" />
+        <SolidColorBrush x:Key="ButtonPressedForegroundThemeBrush" Color="LightGray" />
 
         <SolidColorBrush x:Key="PivotHeaderForegroundSelectedBrush" Color="White" />
         <SolidColorBrush x:Key="PivotHeaderForegroundUnselectedBrush" Color="LightGray" />

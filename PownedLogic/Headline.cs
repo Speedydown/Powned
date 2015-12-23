@@ -8,10 +8,11 @@ using Windows.UI.Xaml;
 using SQLiteForWindows;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using WRCHelperLibrary;
 
 namespace PownedLogic
 {
-    public sealed class Headline : DataObject
+    public sealed class Headline : DataObject, INewsLink
     {
         public string URL { get; set; }
         public string ImageURL { get; set; }
@@ -64,6 +65,22 @@ namespace PownedLogic
             this.ImageURL = ImageURL;
             this.Title = Title;
             this.HashTag = HashTag;
+        }
+
+
+        public string Content
+        {
+            get { return string.Empty; }
+        }
+
+        public string CommentCount
+        {
+            get { return string.Empty; }
+        }
+
+        public string Time
+        {
+            get { return string.Empty; }
         }
     }
 }

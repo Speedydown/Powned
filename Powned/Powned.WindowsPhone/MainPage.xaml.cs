@@ -172,7 +172,7 @@ namespace Powned
             Frame.Navigate(typeof(ItemPage), (e.ClickedItem as SearchResult).URL);
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private async void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SettingsPage));
         }

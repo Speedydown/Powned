@@ -84,28 +84,5 @@ namespace PownedLogic
         {
             await HTTPGetUtil.GetDataAsStringFromURL("http://speedydown-001-site2.smarterasp.net/api.ashx?Powned=" + URL);
         }
-
-        public IAsyncAction Login(string Email, string Password)
-        {
-            return LoginHelper(Email, Password).AsAsyncAction();
-        }
-
-        private async Task LoginHelper(string Email, string Password)
-        {
-            string LoginURL = "http://registratie.geenstijl.nl/registratie/?view=login";
-            string LoginPostUrl = "http://registratie.geenstijl.nl/registratie/gs_engine.php?action=login";
-            string CookieSync = "http://www.steylloos.nl/cookiesync.php?site=POW2&return=aHR0cDovL3d3dy5wb3duZWQudHYv";
-
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
-
-            Dictionary<string, string> ValueDictionary = LoginHandler.GetLoginFormFields(PageSource, Email, Password);
-
-            HttpResponseMessage response = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
-
-            if (response.StatusCode == HttpStatusCode.OK && !(await response.Content.ReadAsStringAsync()).Contains("mislukt"))
-            {
-                await HTTPGetUtil.GetDataAsStringFromURL(CookieSync, Encoding.GetEncoding("iso-8859-1"));
-            }
-        }
     }
 }

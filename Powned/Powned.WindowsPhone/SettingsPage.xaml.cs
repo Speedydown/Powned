@@ -1,10 +1,12 @@
 ﻿using Powned.Common;
 using PownedLogic;
+using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -24,13 +26,12 @@ namespace Powned
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        public SettingsContainer settingsContainer { get; private set; }
+        public SettingsViewModel ViewModel { get; private set; }
 
         public SettingsPage()
         {
             this.InitializeComponent();
 
-            this.settingsContainer = Settings.settingsContainer;
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
@@ -48,7 +49,9 @@ namespace Powned
 
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            this.DataContext = Settings.settingsContainer;
+            ViewModel = SettingsViewModel.instance;
+            ViewModel.Init(null);
+            DataContext = ViewModel;
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -81,5 +84,10 @@ namespace Powned
         }
 
         #endregion
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.Login();
+        }
     }
 }

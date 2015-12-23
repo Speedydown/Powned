@@ -1,0 +1,156 @@
+﻿using BaseLogic.DataHandler;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using WebCrawlerTools;
+
+namespace PownedLogic.DataHandlers
+{
+    public class LoginInfoDataHandler : DataHandler
+    {
+        private const string LoginURL = "http://registratie.geenstijl.nl/registratie/?view=login";
+        private const string LoginPostUrl = "http://registratie.geenstijl.nl/registratie/gs_engine.php?action=login";
+        private const string CookieSync = "http://www.steylloos.nl/cookiesync.php?site=POW2&return=";
+        private const string CookieSet = "http://new.powned.tv/cookieset.php?cookie=U3BlZWR5ZG93bg==&tk_commenter={0}&return=";
+
+        public static readonly LoginInfoDataHandler instance = new LoginInfoDataHandler();
+
+        public bool IsLoggedIn { get; private set; }
+        public string CommenterName { get; private set; }
+        public string TK_Commenter { get; private set; }
+
+        private LoginInfoDataHandler()
+            : base()
+        {
+            lock (locker)
+            {
+                CreateTable<LoginInfo>();
+            }
+        }
+
+        public LoginInfo GetLoginInfo()
+        {
+            LoginInfo LoginInfo = GetItems<LoginInfo>().FirstOrDefault();
+
+            if (LoginInfo == null)
+            {
+                LoginInfo = new LoginInfo() { UserName = string.Empty, Password = string.Empty };
+
+                lock (locker)
+                {
+                    Insert(LoginInfo);
+                }
+
+                System.Diagnostics.Debug.WriteLine("[LoginInfo]Adding new logininfo to LocalDB");
+            }
+
+            return LoginInfo;
+        }
+
+        public void UpdateLoginInfo(LoginInfo loginInfo)
+        {
+            ClearTable<LoginInfo>();
+
+            lock (locker)
+            {
+                Insert(loginInfo);
+                System.Diagnostics.Debug.WriteLine("[LoginInfo]Updating new logininfo to LocalDB");
+            }
+        }
+
+        private Dictionary<string, string> GetLoginFormFields(string Source, string Email, string Password)
+        {
+            Dictionary<string, string> ValueDictionary = new Dictionary<string, string>();
+
+            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<form name", Source, true));
+
+            while (true)
+            {
+                try
+                {
+                    string FieldName = HTMLParserUtil.GetContentAndSubstringInput("name=\"", "\" value", Source, out Source, string.Empty, false);
+                    string FieldValue = HTMLParserUtil.GetContentAndSubstringInput("value=\"", "\" />", Source, out Source, string.Empty, false);
+
+                    if (FieldName == "email")
+                    {
+                        FieldValue = Email;
+                    }
+
+                    ValueDictionary.Add(FieldName, FieldValue);
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            ValueDictionary.Add("password", Password);
+            ValueDictionary.Add("submit", "login");
+
+            return ValueDictionary;
+        }
+
+        public async Task Login(LoginInfo loginInfo)
+        {
+            IsLoggedIn = false;
+            TK_Commenter = null;
+            CommenterName = null;
+
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
+
+            Dictionary<string, string> ValueDictionary = GetLoginFormFields(PageSource, loginInfo.UserName, loginInfo.Password);
+
+            HttpResponseMessage response = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
+
+            CookieCollection collection = HTTPGetUtil.Cookiejar.GetCookies(new Uri("http://www.steylloos.nl"));
+            foreach (var c in collection)
+            {
+                string[] CookieArray = c.ToString().Split('=');
+
+                if (CookieArray.Count() == 2)
+                {
+                    if (CookieArray[0] == "tk_commenter")
+                    {
+                        TK_Commenter = CookieArray[1];
+                    }
+                    else if (CookieArray[0] == "commenter_name")
+                    {
+                        CommenterName = CookieArray[1];
+                    }
+                }
+
+            }
+
+            if (response.StatusCode == HttpStatusCode.OK && !(await response.Content.ReadAsStringAsync()).Contains("mislukt"))
+            {
+                IsLoggedIn = true;
+
+                Task.WaitAll(new Task[] 
+                { 
+                    Task.Run(() => HTTPGetUtil.GetDataAsStringFromURL(CookieSync, Encoding.GetEncoding("iso-8859-1"))),
+                    Task.Run(() => HTTPGetUtil.GetDataAsStringFromURL(string.Format(CookieSet, TK_Commenter), Encoding.GetEncoding("iso-8859-1")))
+                });
+            }
+        }
+
+        public async Task PlaceComment(string Comment, string DataEntryID)
+        {
+            if (IsLoggedIn)
+            {
+                Dictionary<string, string> ValueDictionary = new Dictionary<string, string>();
+                ValueDictionary.Add("static", "1");
+                ValueDictionary.Add("entry_id", DataEntryID);
+                ValueDictionary.Add("text", Comment);
+                ValueDictionary.Add("post", "Verstuur");
+
+                HttpResponseMessage response = await HTTPGetUtil.PostDataToURL("http://app.steylloos.nl/mt-comments.fcgi", ValueDictionary);
+
+                string content = await response.Content.ReadAsStringAsync();
+            }
+        }
+    }
+}

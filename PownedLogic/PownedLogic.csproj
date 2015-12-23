@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <WarningLevel>1</WarningLevel>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -82,11 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Datahandler.cs" />
+    <Compile Include="DataHandlers\LoginInfoDataHandler.cs" />
     <Compile Include="DataHandlers\NewsLinksDataHandler.cs" />
     <Compile Include="DataHandlers\HeadlinesDataHandler.cs" />
     <Compile Include="Headline.cs" />
     <Compile Include="HeadlinesParser.cs" />
-    <Compile Include="LoginHandler.cs" />
+    <Compile Include="LoginInfo.cs" />
     <Compile Include="NewsItem.cs" />
     <Compile Include="NewsItemParser.cs" />
     <Compile Include="NewsLink.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="ViewModels\MainpageViewModel.cs" />
     <Compile Include="ViewModels\NewsViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SQLite-net">
