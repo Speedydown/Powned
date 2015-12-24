@@ -24,6 +24,7 @@ namespace PownedLogic
         public IList<string> ImageList { get; private set; }
         public string Author { get; private set; }
         public Uri YoutubeURL { get; private set; }
+        public string entry_id { get; private set; }
 
         public Brush TitleColor
         {
@@ -71,7 +72,7 @@ namespace PownedLogic
 
         public IList<Comment> Comments { get; private set; }
 
-        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube)
+        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube, string entry_id)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
             this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
@@ -87,6 +88,7 @@ namespace PownedLogic
             this.TimeStamp = "";
             this.Updated = "";
             this.MediaFile = null;
+            this.entry_id = entry_id;
         }
     }
 

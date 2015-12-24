@@ -62,6 +62,7 @@ namespace Powned
 
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            Frame.BackStack.Clear();
             this.DataContext = MainpageViewModel.instance;
             SearchViewModel.instance.SetLoadingControl(SearchLoadingControl);
 

@@ -13,6 +13,7 @@ namespace PownedLogic
     {
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string CookieCollection { get; set; }
 
 
         private bool _LoginControlsEnabled;

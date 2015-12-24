@@ -381,12 +381,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.1124.1925.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2015.2119.1520.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.1124.1925.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2015.2119.1520.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

@@ -12,6 +12,10 @@
         <SolidColorBrush x:Key="TextBoxBorderThemeBrush" Color="#FF0099" />
         <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="#FF0099" />
         <SolidColorBrush x:Key="TextBoxForegroundThemeBrush" Color="#FF0099" />
+        <SolidColorBrush x:Key="TextBoxBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="TextBoxDisabledBackgroundThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="TextBoxDisabledForegroundThemeBrush" Color="Transparent" />
 
         <SolidColorBrush x:Key="ButtonBackgroundThemeBrush" Color="Transparent" />
         <SolidColorBrush x:Key="ButtonBorderThemeBrush" Color="#FF0099" />

@@ -30,9 +30,12 @@ namespace PownedLogic
             List<string> ArticleContent = new List<string>();
             string AuthorDate = string.Empty;
             string YoutubeURL = null;
+            string entry_id = string.Empty;
 
             Task NewsItemTask = Task.Run(() =>
                 {
+                    entry_id = HTMLParserUtil.GetContentAndSubstringInput("entry_id=", "%26static", Source, out Source);
+
 
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
 
@@ -85,7 +88,7 @@ namespace PownedLogic
 
             await NewsItemTask;
 
-            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL);
+            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL, entry_id);
         }
 
         private static string GetYouTubeURL(string Source)

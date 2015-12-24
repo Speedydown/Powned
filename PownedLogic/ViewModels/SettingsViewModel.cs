@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using WRCHelperLibrary.Settings;
 using XamlControlLibrary;
 
@@ -17,11 +18,12 @@ namespace PownedLogic.ViewModels
 
         public LoginInfo loginInfo { get; private set; }
         public SettingsContainer settingsContainer { get; private set; }
+        public Visibility LoginLoadingPanelVisibility { get; private set; }
 
         private SettingsViewModel()
             : base()
         {
-
+            LoginLoadingPanelVisibility = Visibility.Collapsed;
         }
 
         public void Init(LoadingControl loadingControl)
@@ -38,6 +40,8 @@ namespace PownedLogic.ViewModels
             {
                 this.IsLoading = true;
                 loginInfo.LoginControlsEnabled = false;
+                LoginLoadingPanelVisibility = Visibility.Visible;
+                NotifyPropertyChanged("LoginLoadingPanelVisibility");
                 Task t = Task.Run(async () =>
                     {
                         await MainpageViewModel.instance.LoginTask;
@@ -46,6 +50,8 @@ namespace PownedLogic.ViewModels
                                 loginInfo.LoginControlsEnabled = true;
                                 loginInfo.UpdateStatus();
                                 this.IsLoading = false;
+                                LoginLoadingPanelVisibility = Visibility.Collapsed;
+                                NotifyPropertyChanged("LoginLoadingPanelVisibility");
                             });
 
                     });
@@ -56,7 +62,8 @@ namespace PownedLogic.ViewModels
         {
             this.IsLoading = true;
             loginInfo.LoginControlsEnabled = false;
-
+            LoginLoadingPanelVisibility = Visibility.Visible;
+            NotifyPropertyChanged("LoginLoadingPanelVisibility");
             await Task.Run(async () =>
                 {
                     LoginInfoDataHandler.instance.UpdateLoginInfo(loginInfo);
@@ -66,6 +73,8 @@ namespace PownedLogic.ViewModels
             loginInfo.LoginControlsEnabled = true;
             loginInfo.UpdateStatus();
             this.IsLoading = false;
+            LoginLoadingPanelVisibility = Visibility.Collapsed;
+            NotifyPropertyChanged("LoginLoadingPanelVisibility");
         }
 
 

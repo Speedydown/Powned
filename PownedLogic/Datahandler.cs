@@ -14,6 +14,8 @@ namespace PownedLogic
 {
     public sealed class Datahandler : IDataHandler
     {
+        private static readonly Random randomizer = new Random();
+
         private static readonly Datahandler _instance = new Datahandler();
         public static Datahandler instance
         {
@@ -73,6 +75,8 @@ namespace PownedLogic
             {
                 URL = "http://www.powned.tv" + URL;
             }
+
+            URL += "?" + randomizer.Next(0, 20000000);
 
             Task PostAppStats = Task.Run(() => PostAppStatsHelper(URL));
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(URL, Encoding.GetEncoding("iso-8859-1"));

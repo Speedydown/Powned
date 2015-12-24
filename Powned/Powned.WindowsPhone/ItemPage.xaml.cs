@@ -1,13 +1,16 @@
 ﻿using Powned.Common;
 using PownedLogic;
+using PownedLogic.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,9 +25,15 @@ namespace Powned
 {
     public sealed partial class ItemPage : Page
     {
+        private static Task PlaceCommentTask = null;
+
         private string CurrentURL = string.Empty;
         private RelayCommand _checkedGoBackCommand;
         private NavigationHelper navigationHelper;
+        public NewsItem newsItem { get; private set; }
+        public LoginInfo loginInfo { get; private set; }
+        public bool CommentingIsEnabled { get; private set; }
+        public string CommentText { get; set; }
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         public ItemPage()
@@ -74,15 +83,41 @@ namespace Powned
 
                 if (e.NavigationParameter != null)
                 {
+                    loginInfo = LoginInfoDataHandler.instance.GetLoginInfo();
                     NewsItemControl.DisableFullScreen = true;
                     CurrentURL = (string)e.NavigationParameter;
-                    NewsItem newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
+                    newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
                     LoadingControl.SetLoadingStatus(false);
-                    this.DataContext = newsItem;
+                    this.DataContext = this;
 
                     if (newsItem.Comments.Count > 0)
                     {
                         CommentsGrid.Visibility = Visibility.Visible;
+                    }
+
+                    PlaceCommentPanel.Visibility = Visibility.Visible;
+
+                    if (!(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"] != null && Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"])))
+                    {
+                        PlaceCommentPanel.Visibility = Visibility.Collapsed;
+                    }
+
+                    if ((PlaceCommentTask == null || PlaceCommentTask.IsCompleted) && LoginInfoDataHandler.instance.IsLoggedIn)
+                    {
+                        CommentTextbox.IsEnabled = true;
+                        PlaceCommentButton.IsEnabled = true;
+                    }
+                    else if (!LoginInfoDataHandler.instance.IsLoggedIn)
+                    {
+                        PlaceCommentButton.Visibility = Visibility.Collapsed;
+                        CommentTextbox.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        CommentTextbox.IsEnabled = false;
+                        await PlaceCommentTask;
+                        CommentTextbox.IsEnabled = true;
+                        PlaceCommentButton.IsEnabled = true;
                     }
                 }
             }
@@ -133,6 +168,18 @@ namespace Powned
         private void ShareButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private async void PlaceCommentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommentText != null && CommentText.Length > 3)
+            {
+                PlaceCommentButton.Visibility = Visibility.Collapsed;
+                CommentTextbox.Visibility = Visibility.Collapsed;
+                PlaceCommentTask = LoginInfoDataHandler.instance.PlaceComment(CommentText, newsItem.entry_id);
+                CommentText = string.Empty;
+                await PlaceCommentTask;
+            }
         }
     }
 }

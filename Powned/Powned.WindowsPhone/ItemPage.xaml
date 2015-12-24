@@ -19,14 +19,15 @@
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <ScrollViewer VerticalScrollMode="Auto" Grid.Row="0" Background="White">
+        <ScrollViewer VerticalScrollMode="Auto" Grid.Row="0" Background="White" IsTabStop="True">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <CLib:DisplayNewsItemControl  x:Name="NewsItemControl"/>
-                <StackPanel x:Name="CommentsGrid" Visibility="Collapsed" Grid.Row="1">
+                <CLib:DisplayNewsItemControl x:Name="NewsItemControl" DataContext="{Binding newsItem}"/>
+                <StackPanel x:Name="CommentsGrid" Visibility="Collapsed" Grid.Row="1" DataContext="{Binding newsItem}">
                     <TextBlock Text="Reaguursels"  Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="19" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
                     <ListView IsItemClickEnabled="False" IsHitTestVisible="False" ItemsSource="{Binding Comments}">
                         <ListView.ItemTemplate>
@@ -38,6 +39,12 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                </StackPanel>
+                <StackPanel x:Name="PlaceCommentPanel" Grid.Row="2" Margin="4" Visibility="Collapsed">
+                    <TextBlock FontSize="32" FontWeight="Bold" Foreground="Black" Text="Reageer ook"/>
+                    <TextBlock Foreground="Black" Text="{Binding LoginStatus}" FontSize="18" DataContext="{Binding loginInfo}"/>
+                    <TextBox x:Name="CommentTextbox" AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="False"/>
+                    <Button x:Name="PlaceCommentButton" HorizontalAlignment="Stretch" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="Verstuur" Click="PlaceCommentButton_Click" IsEnabled="False"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

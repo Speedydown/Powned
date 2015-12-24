@@ -1,4 +1,5 @@
 ﻿using BaseLogic.DataHandler;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace PownedLogic.DataHandlers
         public bool IsLoggedIn { get; private set; }
         public string CommenterName { get; private set; }
         public string TK_Commenter { get; private set; }
+        public string LoggedInUserName { get; private set; }
+        public string LoggedInPassWord { get; private set; }
 
         private LoginInfoDataHandler()
             : base()
@@ -96,45 +99,103 @@ namespace PownedLogic.DataHandlers
 
         public async Task Login(LoginInfo loginInfo)
         {
+            await Task.Delay(1000);
+
+            if (IsLoggedIn && LoggedInUserName == loginInfo.UserName && LoggedInPassWord == loginInfo.Password)
+            {
+                return;
+            }
+            else if (IsLoggedIn && (LoggedInUserName != loginInfo.UserName || LoggedInPassWord != loginInfo.Password))
+            {
+                loginInfo.CookieCollection = null;
+                UpdateLoginInfo(loginInfo);
+            }
+
+            LoggedInUserName = loginInfo.UserName;
+            LoggedInPassWord = loginInfo.Password;
             IsLoggedIn = false;
             TK_Commenter = null;
             CommenterName = null;
 
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
-
-            Dictionary<string, string> ValueDictionary = GetLoginFormFields(PageSource, loginInfo.UserName, loginInfo.Password);
-
-            HttpResponseMessage response = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
-
-            CookieCollection collection = HTTPGetUtil.Cookiejar.GetCookies(new Uri("http://www.steylloos.nl"));
-            foreach (var c in collection)
+            if (string.IsNullOrEmpty(loginInfo.CookieCollection))
             {
-                string[] CookieArray = c.ToString().Split('=');
+                string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(LoginURL, Encoding.GetEncoding("iso-8859-1"));
 
-                if (CookieArray.Count() == 2)
+                Dictionary<string, string> ValueDictionary = GetLoginFormFields(PageSource, loginInfo.UserName, loginInfo.Password);
+
+                HttpResponseMessage response = await HTTPGetUtil.PostDataToURL(LoginPostUrl, ValueDictionary);
+
+                if (!IsCookieCollectionValid())
                 {
-                    if (CookieArray[0] == "tk_commenter")
-                    {
-                        TK_Commenter = CookieArray[1];
-                    }
-                    else if (CookieArray[0] == "commenter_name")
-                    {
-                        CommenterName = CookieArray[1];
-                    }
+                    return;
                 }
 
+                if (!(response.StatusCode == HttpStatusCode.OK && !(await response.Content.ReadAsStringAsync()).Contains("mislukt")))
+                {
+                    return;
+                }
+                else
+                {
+                    loginInfo.CookieCollection = JsonConvert.SerializeObject(HTTPGetUtil.Cookiejar.GetCookies(new Uri("http://www.steylloos.nl")).OfType<Cookie>().ToList());
+                    UpdateLoginInfo(loginInfo);
+                }
+            }
+            else
+            {
+                List<Cookie> CookieCollection = JsonConvert.DeserializeObject<List<Cookie>>(loginInfo.CookieCollection);
+
+                if (!IsCookieCollectionValid(CookieCollection))
+                {
+                    loginInfo.CookieCollection = null;
+                    UpdateLoginInfo(loginInfo);
+
+                    await Login(loginInfo);
+                }
             }
 
-            if (response.StatusCode == HttpStatusCode.OK && !(await response.Content.ReadAsStringAsync()).Contains("mislukt"))
-            {
-                IsLoggedIn = true;
+            IsLoggedIn = true;
 
-                Task.WaitAll(new Task[] 
+            Task.WaitAll(new Task[] 
                 { 
                     Task.Run(() => HTTPGetUtil.GetDataAsStringFromURL(CookieSync, Encoding.GetEncoding("iso-8859-1"))),
                     Task.Run(() => HTTPGetUtil.GetDataAsStringFromURL(string.Format(CookieSet, TK_Commenter), Encoding.GetEncoding("iso-8859-1")))
                 });
+        }
+
+        public bool IsCookieCollectionValid(List<Cookie> CookieCollection = null)
+        {
+            if (CookieCollection == null)
+            {
+                CookieCollection = HTTPGetUtil.Cookiejar.GetCookies(new Uri("http://www.steylloos.nl")).OfType<Cookie>().ToList();
             }
+            else
+            {
+                foreach (Cookie c in CookieCollection)
+                {
+                    HTTPGetUtil.Cookiejar.Add(new Uri("http://www.steylloos.nl"), c);
+                }
+            }
+
+            foreach (var c in CookieCollection)
+            {
+                if (c.Expires > DateTime.Now)
+                {
+                    if (c.Name == "tk_commenter")
+                    {
+                        TK_Commenter = c.Value;
+                    }
+                    else if (c.Name == "commenter_name")
+                    {
+                        CommenterName = c.Value;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return CommenterName != string.Empty && TK_Commenter != string.Empty;
         }
 
         public async Task PlaceComment(string Comment, string DataEntryID)
@@ -150,6 +211,8 @@ namespace PownedLogic.DataHandlers
                 HttpResponseMessage response = await HTTPGetUtil.PostDataToURL("http://app.steylloos.nl/mt-comments.fcgi", ValueDictionary);
 
                 string content = await response.Content.ReadAsStringAsync();
+
+                //TODO Check op niet ingelogd foutmelding
             }
         }
     }
