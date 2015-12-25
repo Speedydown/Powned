@@ -27,25 +27,30 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <CLib:DisplayNewsItemControl x:Name="NewsItemControl" DataContext="{Binding newsItem}"/>
-                <StackPanel x:Name="CommentsGrid" Visibility="Collapsed" Grid.Row="1" DataContext="{Binding newsItem}">
-                    <TextBlock Text="Reaguursels"  Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="19" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-                    <ListView IsItemClickEnabled="False" IsHitTestVisible="False" ItemsSource="{Binding Comments}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="0,0,0,15">
-                                    <TextBlock Text="{Binding Content}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" />
-                                    <TextBlock Text="{Binding AuthorDateTime}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Gray" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-                <StackPanel x:Name="PlaceCommentPanel" Grid.Row="2" Margin="4" Visibility="Collapsed">
-                    <TextBlock FontSize="32" FontWeight="Bold" Foreground="Black" Text="Reageer ook"/>
-                    <TextBlock Foreground="Black" Text="{Binding LoginStatus}" FontSize="18" DataContext="{Binding loginInfo}"/>
-                    <TextBox x:Name="CommentTextbox" AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="False"/>
-                    <Button x:Name="PlaceCommentButton" HorizontalAlignment="Stretch" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="Verstuur" Click="PlaceCommentButton_Click" IsEnabled="False"/>
-                </StackPanel>
+                <Grid x:Name="CommentsGrid" Grid.Row="1"  Visibility="{Binding CommentsGridVisiblity}">
+                    <StackPanel DataContext="{Binding newsItem}">
+                        <TextBlock Text="Reaguursels"  Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="19" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                        <ListView IsItemClickEnabled="False" IsHitTestVisible="False" ItemsSource="{Binding Comments}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,15">
+                                        <TextBlock Text="{Binding Content}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" />
+                                        <TextBlock Text="{Binding AuthorDateTime}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Gray" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Margin="4">
+                    <ProgressRing IsActive="True" Background="White" Visibility="{Binding PlaceCommentProgressRingVisibility}"/>
+                    <StackPanel x:Name="PlaceCommentPanel" Visibility="{Binding PlaceCommentPanel}">
+                        <TextBlock FontSize="32" FontWeight="Bold" Foreground="Black" Text="Reageer ook"/>
+                        <TextBlock Foreground="Black" Text="{Binding LoginStatus}" FontSize="18" DataContext="{Binding loginInfo}"/>
+                        <TextBox x:Name="CommentTextbox" AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="{Binding CommentControlsEnabled}"/>
+                        <Button x:Name="PlaceCommentButton" HorizontalAlignment="Stretch" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="Verstuur" Click="PlaceCommentButton_Click" IsEnabled="{Binding CommentControlsEnabled}"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </ScrollViewer>
         <CLib:LoadingControl Grid.Row="0" Grid.RowSpan="2" Background="White" x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Een ogenblik geduld."/>

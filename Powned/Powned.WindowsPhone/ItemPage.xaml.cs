@@ -1,6 +1,7 @@
 ﻿using Powned.Common;
 using PownedLogic;
 using PownedLogic.DataHandlers;
+using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,15 +26,11 @@ namespace Powned
 {
     public sealed partial class ItemPage : Page
     {
-        private static Task PlaceCommentTask = null;
-
-        private string CurrentURL = string.Empty;
+        public bool RefreshPage { get; private set; }
+        public NewsItemViewModel ViewModel { get; private set; }
         private RelayCommand _checkedGoBackCommand;
         private NavigationHelper navigationHelper;
-        public NewsItem newsItem { get; private set; }
-        public LoginInfo loginInfo { get; private set; }
-        public bool CommentingIsEnabled { get; private set; }
-        public string CommentText { get; set; }
+
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         public ItemPage()
@@ -50,6 +47,7 @@ namespace Powned
                                 );
 
             navigationHelper.GoBackCommand = _checkedGoBackCommand;
+            RefreshPage = true;
         }
 
         private bool CanCheckGoBack()
@@ -77,58 +75,14 @@ namespace Powned
 
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            try
+            if (e.NavigationParameter != null)
             {
-                LoadingControl.SetLoadingStatus(true);
-
-                if (e.NavigationParameter != null)
-                {
-                    loginInfo = LoginInfoDataHandler.instance.GetLoginInfo();
-                    NewsItemControl.DisableFullScreen = true;
-                    CurrentURL = (string)e.NavigationParameter;
-                    newsItem = await Datahandler.instance.GetNewsItemByURL(e.NavigationParameter.ToString()) as NewsItem;
-                    LoadingControl.SetLoadingStatus(false);
-                    this.DataContext = this;
-
-                    if (newsItem.Comments.Count > 0)
-                    {
-                        CommentsGrid.Visibility = Visibility.Visible;
-                    }
-
-                    PlaceCommentPanel.Visibility = Visibility.Visible;
-
-                    if (!(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"] != null && Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"])))
-                    {
-                        PlaceCommentPanel.Visibility = Visibility.Collapsed;
-                    }
-
-                    if ((PlaceCommentTask == null || PlaceCommentTask.IsCompleted) && LoginInfoDataHandler.instance.IsLoggedIn)
-                    {
-                        CommentTextbox.IsEnabled = true;
-                        PlaceCommentButton.IsEnabled = true;
-                    }
-                    else if (!LoginInfoDataHandler.instance.IsLoggedIn)
-                    {
-                        PlaceCommentButton.Visibility = Visibility.Collapsed;
-                        CommentTextbox.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        CommentTextbox.IsEnabled = false;
-                        await PlaceCommentTask;
-                        CommentTextbox.IsEnabled = true;
-                        PlaceCommentButton.IsEnabled = true;
-                    }
-                }
+                NewsItemControl.DisableFullScreen = true;
+                ViewModel = new NewsItemViewModel(LoadingControl);
+                this.DataContext = ViewModel;
+                await ViewModel.LoadState(e.NavigationParameter.ToString());
             }
-            catch
-            {
-                LoadingControl.DisplayLoadingError(true);
-            }
-            finally
-            {
-                LoadingControl.SetLoadingStatus(false);
-            }
+     
 
             await ArticleCounter.AddArticleCount();
         }
@@ -136,6 +90,7 @@ namespace Powned
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
             this.DataContext = null;
+            RefreshPage = false;
         }
 
         #region NavigationHelper registration
@@ -172,13 +127,13 @@ namespace Powned
 
         private async void PlaceCommentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CommentText != null && CommentText.Length > 3)
+            await ViewModel.PlaceCommentButton_Click(sender, e);
+
+            await NewsItemViewModel.PlaceCommentTask;
+
+            if (RefreshPage)
             {
-                PlaceCommentButton.Visibility = Visibility.Collapsed;
-                CommentTextbox.Visibility = Visibility.Collapsed;
-                PlaceCommentTask = LoginInfoDataHandler.instance.PlaceComment(CommentText, newsItem.entry_id);
-                CommentText = string.Empty;
-                await PlaceCommentTask;
+                Frame.Navigate(typeof(ItemPage), ViewModel.URL);
             }
         }
     }
