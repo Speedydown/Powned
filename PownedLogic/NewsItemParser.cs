@@ -57,7 +57,10 @@ namespace PownedLogic
                             string Content = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", RawArticleContent, out RawArticleContent, "", true);
                             Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
 
-                            ArticleContent.Add(Content);
+                            if (Content != string.Empty)
+                            {
+                                ArticleContent.Add(Content);
+                            }
                         }
                         catch
                         {
@@ -78,6 +81,7 @@ namespace PownedLogic
 
             if (GetMediaContent)
             {
+                Task BaseImageTask = Task.Run(() => GetBaseImagesFromSource(SourceBackupForTwitterImage, Images));
                 Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
                 Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
             }
@@ -132,6 +136,28 @@ namespace PownedLogic
             }
 
             return Comments;
+        }
+
+        private static async Task GetBaseImagesFromSource(string Source, ObservableCollection<string> Images)
+        {
+            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-main\">", Source, false));
+            Source = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "</div>", Source, out Source);
+
+            while (true)
+            {
+                try
+                {
+                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<img ", Source, true));
+                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("src=\"", Source, false));
+                    string Image = HTMLParserUtil.GetContentAndSubstringInput("src=\"", "\" ", Source, out Source);
+
+                    Images.Add(Image);
+                }
+                catch
+                {
+                    break;
+                }
+            }
         }
 
         private async static Task<List<Comment>> CommentsParser(string CommentHTML)

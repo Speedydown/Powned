@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="52891Speedydown.PowNed" Publisher="CN=66C50CC1-FBB4-401C-87F4-C13E4975CFAE" Version="2015.2124.1208.0" />
+  <Identity Name="52891Speedydown.PowNed" Publisher="CN=66C50CC1-FBB4-401C-87F4-C13E4975CFAE" Version="2015.2125.1856.0" />
   <mp:PhoneIdentity PhoneProductId="a3f1e931-854e-4151-a17f-575728c7360c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>PowNed</DisplayName>
