@@ -120,19 +120,6 @@ namespace PownedLogic.ViewModels
             });
 
             LastLoadedTimeStamp = DateTime.Now;
-            SetLastNewsItemAsNotificationMarker();
-        }
-
-        private void SetLastNewsItemAsNotificationMarker()
-        {
-            try
-            {
-                localSettings.Values["LastActualNewsItem"] = NewsLinks.First().URL;
-            }
-            catch
-            {
-
-            }
         }
 
         public void ClearCachedData()

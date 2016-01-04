@@ -15,6 +15,18 @@ namespace PownedLogic
         public string Password { get; set; }
         public string CookieCollection { get; set; }
 
+        private DateTime? _LastNewsRetrival = null;
+        public DateTime LastNewsRetrival
+        {
+            get
+            {
+                return _LastNewsRetrival == null ? DateTime.Now.AddDays(-1) : _LastNewsRetrival.Value;
+            }
+            set
+            {
+                _LastNewsRetrival = value;
+            }
+        }
 
         private bool _LoginControlsEnabled;
         [Ignore]
@@ -64,6 +76,12 @@ namespace PownedLogic
         {
             NotifyPropertyChanged("LoginText");
             NotifyPropertyChanged("LoginStatus");
+        }
+
+        public void UpdateLastNewsRetrival(DateTime LastNewsRetrival)
+        {
+            this.LastNewsRetrival = LastNewsRetrival;
+            LoginInfoDataHandler.instance.UpdateLoginInfo(this);
         }
     }
 }

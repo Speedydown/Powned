@@ -54,6 +54,11 @@ namespace PownedLogic
                     {
                         try
                         {
+                            if (!RawArticleContent.Contains("<p>"))
+                            {
+                                break;
+                            }
+
                             string Content = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", RawArticleContent, out RawArticleContent, "", true);
                             Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
 
@@ -97,6 +102,11 @@ namespace PownedLogic
 
         private static string GetYouTubeURL(string Source)
         {
+            if (!Source.Contains("https://www.youtube.com/embed/"))
+            {
+                return null;
+            }
+
             try
             {
                 Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("https://www.youtube.com/embed/", Source, false));
@@ -123,6 +133,11 @@ namespace PownedLogic
 
                     int HalfOFCommentsIndex = CommentHTML.IndexOf("<div class=\"comment\"", CommentHTML.Length / 2);
 
+                    if (HalfOFCommentsIndex == -1)
+                    {
+                        return Comments;
+                    }
+
                     Task<List<Comment>> FirstHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(0, HalfOFCommentsIndex)));
                     Task<List<Comment>> SecondHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(HalfOFCommentsIndex)));
 
@@ -142,6 +157,11 @@ namespace PownedLogic
         {
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-main\">", Source, false));
             Source = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "</div>", Source, out Source);
+
+            if (!Source.Contains("<img "))
+            {
+                return;
+            }
 
             while (true)
             {
@@ -168,6 +188,11 @@ namespace PownedLogic
             {
                 try
                 {
+                    if (!CommentHTML.Contains("<div class=\"comment\""))
+                    {
+                        break;
+                    }
+
                     CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
                     string Content = string.Empty;
 
@@ -177,6 +202,11 @@ namespace PownedLogic
                     {
                         try
                         {
+                            if (!ThisCommentHTML.Contains("<p>"))
+                            {
+                                break;
+                            }
+
                             Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
                         }
                         catch
@@ -203,6 +233,11 @@ namespace PownedLogic
 
         private static async Task GetImagesFromSource(string Source, ObservableCollection<string> Images)
         {
+            if (!Source.Contains("<blockquote class=\"twitter-tweet"))
+            {
+                return;
+            }
+
             try
             {
                 Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"twitter-tweet", Source, false));
@@ -237,6 +272,11 @@ namespace PownedLogic
 
         private static async Task GetInstaGramImagesFromSource(string Source, ObservableCollection<string> Images)
         {
+            if (!Source.Contains("<blockquote class=\"instagram-media\""))
+            {
+                return;
+            }
+
             try
             {
                 Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"instagram-media\"", Source, false));

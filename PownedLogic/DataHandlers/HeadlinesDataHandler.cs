@@ -106,6 +106,11 @@ namespace PownedLogic.DataHandlers
             {
                 try
                 {
+                    if (!Source.Contains("<a href=\""))
+                    {
+                        break;
+                    }
+
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<a href=\"", Source, false));
                     string URL = HTMLParserUtil.GetContentAndSubstringInput("<a href=\"", "\">", Source, out Source, "", true);
                     string ImageURL = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" />", Source, out Source, "", true);
