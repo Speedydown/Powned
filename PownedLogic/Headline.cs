@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using SQLiteForWindows;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using WRCHelperLibrary;
+using SQLite.Net.Attributes;
 
 namespace PownedLogic
 {

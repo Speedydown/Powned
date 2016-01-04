@@ -1,5 +1,5 @@
 ﻿using BaseLogic.DataHandler;
-using SQLiteForWindows;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

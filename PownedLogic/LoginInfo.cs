@@ -1,6 +1,6 @@
 ﻿using BaseLogic.DataHandler;
 using PownedLogic.DataHandlers;
-using SQLiteForWindows;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
