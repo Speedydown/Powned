@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -59,10 +60,7 @@ namespace PownedLogic.ViewModels
             }
             catch
             {
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        this.DisplayError = true;
-                    });
+                this.DisplayError = true;
             }
         }
     }

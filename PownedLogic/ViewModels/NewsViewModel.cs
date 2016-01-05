@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,13 +49,12 @@ namespace PownedLogic.ViewModels
             }
             catch
             {
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    DisplayError = true;
-                });
 
-                return new List<INewsLink>();
             }
+
+            DisplayError = true;
+
+            return new List<INewsLink>();
         }
 
         private async Task<IList<PopularHeadline>> GetPopularHeadlinesOperationAsTask()

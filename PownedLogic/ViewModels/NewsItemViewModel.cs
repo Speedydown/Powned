@@ -1,5 +1,6 @@
 ﻿using BaseLogic;
 using PownedLogic.DataHandlers;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,8 @@ namespace PownedLogic.ViewModels
             try
             {
                 loginInfo = LoginInfoDataHandler.instance.GetLoginInfo();
+                loginInfo.UpdateStatus();
+
                 newsItem = await Datahandler.instance.GetNewsItemByURL(URL) as NewsItem;
 
                 if (newsItem.Comments.Count > 0)

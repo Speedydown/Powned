@@ -10,7 +10,7 @@ using Windows.UI.Core;
 using WRCHelperLibrary;
 using SQLite.Net.Attributes;
 
-namespace PownedLogic
+namespace PownedLogic.Model
 {
     public sealed class Headline : DataObject, INewsLink
     {

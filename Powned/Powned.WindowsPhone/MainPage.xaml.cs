@@ -1,5 +1,6 @@
 ﻿using Powned.Common;
 using PownedLogic;
+using PownedLogic.Model;
 using PownedLogic.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -173,7 +174,7 @@ namespace Powned
             Frame.Navigate(typeof(ItemPage), (e.ClickedItem as SearchResult).URL);
         }
 
-        private async void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SettingsPage));
         }

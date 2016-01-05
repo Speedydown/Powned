@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
 
-namespace PownedLogic
+namespace PownedLogic.Model
 {
     public sealed class SearchResult
     {

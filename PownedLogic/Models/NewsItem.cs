@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using WRCHelperLibrary;
 
-namespace PownedLogic
+namespace PownedLogic.Model
 {
     public sealed class NewsItem : INewsItem
     {

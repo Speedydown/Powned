@@ -1,5 +1,6 @@
 ﻿using BaseLogic;
 using PownedLogic.DataHandlers;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,13 +36,12 @@ namespace PownedLogic.ViewModels
             }
             catch
             {
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                 {
-                     DisplayError = true;
-                 });
 
-                return new List<Headline>();
             }
+
+            DisplayError = true;
+
+            return new List<Headline>();
         }
 
         public async Task LoadData(LoadingControl loadingControl)

@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using WebCrawlerTools;
 using WRCHelperLibrary;
 
-namespace PownedLogic
+namespace PownedLogic.Model
 {
     public sealed class NewsLink : DataObject, INewsLink
     {
+        [Unique][NotNull]
         public string URL { get; set; }
         public string Title { get; set; }
         public string Time { get; set; }

@@ -1,4 +1,5 @@
 ﻿using BaseLogic.DataHandler;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,14 +40,21 @@ namespace PownedLogic.DataHandlers
 
                 foreach (NewsLink nl in NewslinksFromSource.Reverse())
                 {
-                    if (base.GetItems<NewsLink>().Where(n => n.URL == nl.URL ||
-                        (n.Title == nl.Title && n.ImageURL == nl.ImageURL)).Count() == 0)
+                    if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 0)
                     {
                         nl.New = true;
                         nl.TimeStamp = DateTime.Now;
                         lock (locker)
                         {
-                            base.Insert(nl);
+                            try
+                            {
+                                base.Insert(nl);
+                            }
+                            catch
+                            {
+                                //Double
+                            }
+
                         }
 
                         LoginInfoDataHandler.instance.GetLoginInfo().UpdateLastNewsRetrival(DateTime.Now); 
@@ -57,7 +65,28 @@ namespace PownedLogic.DataHandlers
 
             var NewsLinksFromDB = base.GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID).Take(15).ToList();
             NewsSemaphore.Release();
+            Task ClearDoubleItemsFromDBTask = Task.Run(() => ClearDoubleItemsFromDB());
             return NewsLinksFromDB.Cast<INewsLink>().ToList();
+        }
+
+        private async Task ClearDoubleItemsFromDB()
+        {
+            await NewsSemaphore.WaitAsync();
+
+            int Counter = 0;
+            var Newslinks = GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID);
+
+            foreach (NewsLink nl in Newslinks)
+            {
+                Counter++;
+
+                if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 2 || Counter > 40)
+                {
+                    DeleteItem<NewsLink>(nl);
+                }
+            }
+
+            NewsSemaphore.Release();
         }
 
         private void MarkNewsLinksAsOld()
@@ -81,6 +110,11 @@ namespace PownedLogic.DataHandlers
 
             while (true)
             {
+                if (!Source.Contains("<li><span class=\"t\">"))
+                {
+                    break;
+                }
+
                 try
                 {
                     string Time = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"t\">", "</span>", Source, out Source, "", true);

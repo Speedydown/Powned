@@ -47,7 +47,7 @@
                     <StackPanel x:Name="PlaceCommentPanel" Visibility="{Binding PlaceCommentPanel}">
                         <TextBlock FontSize="32" FontWeight="Bold" Foreground="Black" Text="Reageer ook"/>
                         <TextBlock Foreground="Black" Text="{Binding LoginStatus}" FontSize="18" DataContext="{Binding loginInfo}"/>
-                        <TextBox x:Name="CommentTextbox" PlaceholderText="Type hier je bericht, Deze functionaliteit is nog in ontwikkeling en zal nog verbeterd worden." AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="{Binding CommentControlsEnabled}"/>
+                        <TextBox x:Name="CommentTextbox" PlaceholderText="Ventileer hier je gedachten." TextWrapping="Wrap" AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="{Binding CommentControlsEnabled}"/>
                         <Button x:Name="PlaceCommentButton" HorizontalAlignment="Stretch" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="Verstuur" Click="PlaceCommentButton_Click" IsEnabled="{Binding CommentControlsEnabled}"/>
                     </StackPanel>
                 </Grid>

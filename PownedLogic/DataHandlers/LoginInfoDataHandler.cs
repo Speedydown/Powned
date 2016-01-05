@@ -1,5 +1,6 @@
 ﻿using BaseLogic.DataHandler;
 using Newtonsoft.Json;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

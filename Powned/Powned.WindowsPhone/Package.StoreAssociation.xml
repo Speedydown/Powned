@@ -381,12 +381,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Arm</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.2125.1856.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.105.1120.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.2125.1856.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.105.1120.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

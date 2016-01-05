@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PownedLogic
+namespace PownedLogic.Model
 {
     public class LoginInfo : DataObject
     {

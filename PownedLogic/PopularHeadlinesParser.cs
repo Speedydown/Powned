@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PownedLogic.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,11 @@ namespace PownedLogic
 
             while (true)
             {
+                if (!Source.Contains("<li><span class=\"c\""))
+                {
+                    break;
+                }
+
                 try
                 {
                     string CommentCount = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"c\">", "</span>", Source, out Source, "", true);

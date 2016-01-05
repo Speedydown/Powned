@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PownedLogic.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -153,18 +154,18 @@ namespace PownedLogic
             return Comments;
         }
 
-        private static async Task GetBaseImagesFromSource(string Source, ObservableCollection<string> Images)
+        private static void GetBaseImagesFromSource(string Source, ObservableCollection<string> Images)
         {
             Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-main\">", Source, false));
             Source = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "</div>", Source, out Source);
 
-            if (!Source.Contains("<img "))
-            {
-                return;
-            }
-
             while (true)
             {
+                if (!Source.Contains("<img "))
+                {
+                    return;
+                }
+
                 try
                 {
                     Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<img ", Source, true));
@@ -249,6 +250,11 @@ namespace PownedLogic
 
             while (true)
             {
+                if (!Source.Contains("<blockquote class=\"twitter-tweet"))
+                {
+                    return;
+                }
+
                 try
                 {
                     //GetTwitterURL's
@@ -258,7 +264,7 @@ namespace PownedLogic
 
                     string ImageURL = await GetPicture("http://" + TwitterHTMLL);
 
-                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                       {
                           Images.Add(ImageURL);
                       });
@@ -297,7 +303,7 @@ namespace PownedLogic
 
                     string ImageURL = await GetPictureInstagram(InstagramURL);
 
-                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                        {
                            try
                            {
