@@ -17,7 +17,7 @@ namespace PownedLogic.DataHandlers
     public class NewsLinksDataHandler : DataHandler
     {
         public static readonly NewsLinksDataHandler instance = new NewsLinksDataHandler();
-        public static readonly SemaphoreSlim NewsSemaphore = new SemaphoreSlim(1,1);
+        public static readonly SemaphoreSlim NewsSemaphore = new SemaphoreSlim(1, 1);
 
         private NewsLinksDataHandler()
             : base()
@@ -34,36 +34,56 @@ namespace PownedLogic.DataHandlers
 
             if (DateTime.Now.Subtract(LoginInfoDataHandler.instance.GetLoginInfo().LastNewsRetrival).TotalMinutes > 4)
             {
-                MarkNewsLinksAsOld();
+                try
+                {
+                    MarkNewsLinksAsOld();
+                }
+                catch
+                {
+                    
+                    ClearTable<NewsLink>();
+                    System.Diagnostics.Debug.WriteLine("[NewsLink]Clearing newslinks from localDB.");
+                }
+
                 string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
                 IList<INewsLink> NewslinksFromSource = GetNewsLinksFromSource(PageSource);
 
-                foreach (NewsLink nl in NewslinksFromSource.Reverse())
+                try
                 {
-                    if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 0)
+                    foreach (NewsLink nl in NewslinksFromSource.Reverse())
                     {
-                        nl.New = true;
-                        nl.TimeStamp = DateTime.Now;
-                        lock (locker)
+                        if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 0)
                         {
-                            try
+                            nl.New = true;
+                            nl.TimeStamp = DateTime.Now;
+                            lock (locker)
                             {
-                                base.Insert(nl);
-                            }
-                            catch
-                            {
-                                //Double
+                                try
+                                {
+                                    base.Insert(nl);
+                                }
+                                catch
+                                {
+                                    //Double
+                                }
+
                             }
 
+                            LoginInfoDataHandler.instance.GetLoginInfo().UpdateLastNewsRetrival(DateTime.Now);
+                            System.Diagnostics.Debug.WriteLine("[NewsLink]Adding " + nl.Title + " to localDB.");
                         }
-
-                        LoginInfoDataHandler.instance.GetLoginInfo().UpdateLastNewsRetrival(DateTime.Now); 
-                        System.Diagnostics.Debug.WriteLine("[NewsLink]Adding " + nl.Title + " to localDB.");
                     }
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine("[NewsLink]Clearing newslinks from localDB.");
+                    ClearTable<NewsLink>();
+                    return NewslinksFromSource;
                 }
             }
 
             var NewsLinksFromDB = base.GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID).Take(15).ToList();
+
             NewsSemaphore.Release();
             Task ClearDoubleItemsFromDBTask = Task.Run(() => ClearDoubleItemsFromDB());
             return NewsLinksFromDB.Cast<INewsLink>().ToList();
@@ -91,15 +111,26 @@ namespace PownedLogic.DataHandlers
 
         private void MarkNewsLinksAsOld()
         {
+
             foreach (NewsLink nl in GetItems<NewsLink>().Where(n => n.New))
             {
-                nl.New = false;
-                lock (locker)
+                try
                 {
-                    Update(nl);
+                    nl.New = false;
+                    lock (locker)
+                    {
+                        Update(nl);
+                    }
+                    System.Diagnostics.Debug.WriteLine("[NewsLink]Marking " + nl.Title + " as old");
                 }
-                System.Diagnostics.Debug.WriteLine("[NewsLink]Marking " + nl.Title + " as old");
+                catch
+                {
+                    //Double Item
+                    DeleteItem<NewsLink>(nl);
+                    System.Diagnostics.Debug.WriteLine("[NewsLink]Deleting " + nl.Title + " as double");
+                }
             }
+
         }
 
         private IList<INewsLink> GetNewsLinksFromSource(string Source)

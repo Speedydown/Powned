@@ -87,9 +87,9 @@ namespace PownedLogic.ViewModels
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                HeadersVisibility = Visibility.Collapsed;
                 NewsLinks.Clear();
                 PopularHeadlines.Clear();
+                HeadersVisibility = Visibility.Collapsed;
                 this.IsLoading = true;
             });
 
@@ -101,6 +101,8 @@ namespace PownedLogic.ViewModels
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                NewsLinks.Clear();
+                PopularHeadlines.Clear();
                 this.IsLoading = false;
 
                 foreach (INewsLink n in Result)
