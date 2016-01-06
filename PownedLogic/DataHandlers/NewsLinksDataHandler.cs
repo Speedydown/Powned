@@ -30,23 +30,25 @@ namespace PownedLogic.DataHandlers
 
         public async Task<IList<INewsLink>> GetNewsLinks()
         {
-            await NewsSemaphore.WaitAsync();
-
             if (DateTime.Now.Subtract(LoginInfoDataHandler.instance.GetLoginInfo().LastNewsRetrival).TotalMinutes > 4)
             {
+                string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
+                IList<INewsLink> NewslinksFromSource = GetNewsLinksFromSource(PageSource);
+
+                await NewsSemaphore.WaitAsync();
+
                 try
                 {
                     MarkNewsLinksAsOld();
                 }
                 catch
                 {
-                    
+
                     ClearTable<NewsLink>();
                     System.Diagnostics.Debug.WriteLine("[NewsLink]Clearing newslinks from localDB.");
                 }
 
-                string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
-                IList<INewsLink> NewslinksFromSource = GetNewsLinksFromSource(PageSource);
+                List<NewsLink> ItemsToAdd = new List<NewsLink>();
 
                 try
                 {
@@ -56,22 +58,18 @@ namespace PownedLogic.DataHandlers
                         {
                             nl.New = true;
                             nl.TimeStamp = DateTime.Now;
-                            lock (locker)
-                            {
-                                try
-                                {
-                                    base.Insert(nl);
-                                }
-                                catch
-                                {
-                                    //Double
-                                }
 
-                            }
+                            ItemsToAdd.Add(nl);
 
-                            LoginInfoDataHandler.instance.GetLoginInfo().UpdateLastNewsRetrival(DateTime.Now);
                             System.Diagnostics.Debug.WriteLine("[NewsLink]Adding " + nl.Title + " to localDB.");
                         }
+                    }
+
+                    LoginInfoDataHandler.instance.GetLoginInfo().UpdateLastNewsRetrival(DateTime.Now);
+
+                    if (ItemsToAdd.Count > 0)
+                    {
+                        SaveItems(ItemsToAdd);
                     }
                 }
                 catch
@@ -80,11 +78,11 @@ namespace PownedLogic.DataHandlers
                     ClearTable<NewsLink>();
                     return NewslinksFromSource;
                 }
+
+                NewsSemaphore.Release();
             }
 
             var NewsLinksFromDB = base.GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID).Take(15).ToList();
-
-            NewsSemaphore.Release();
             Task ClearDoubleItemsFromDBTask = Task.Run(() => ClearDoubleItemsFromDB());
             return NewsLinksFromDB.Cast<INewsLink>().ToList();
         }
@@ -93,6 +91,7 @@ namespace PownedLogic.DataHandlers
         {
             await NewsSemaphore.WaitAsync();
 
+            List<NewsLink> NewslinksToDelete = new List<NewsLink>();
             int Counter = 0;
             var Newslinks = GetItems<NewsLink>().OrderByDescending(h => h.TimeStamp).ThenByDescending(h => h.InternalID);
 
@@ -102,35 +101,37 @@ namespace PownedLogic.DataHandlers
 
                 if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 2 || Counter > 40)
                 {
-                    DeleteItem<NewsLink>(nl);
+                    NewslinksToDelete.Add(nl);
                 }
             }
+
+            BeginTransaction();
+            foreach (NewsLink nl in NewslinksToDelete)
+            {
+                try
+                {
+                    DeleteItem(nl);
+                }
+                catch
+                {
+
+                }
+            }
+            Commit();
 
             NewsSemaphore.Release();
         }
 
         private void MarkNewsLinksAsOld()
         {
+            NewsLink[] NewsLinks = GetItems<NewsLink>().Where(n => n.New).ToArray();
 
-            foreach (NewsLink nl in GetItems<NewsLink>().Where(n => n.New))
+            foreach (NewsLink nl in NewsLinks)
             {
-                try
-                {
-                    nl.New = false;
-                    lock (locker)
-                    {
-                        Update(nl);
-                    }
-                    System.Diagnostics.Debug.WriteLine("[NewsLink]Marking " + nl.Title + " as old");
-                }
-                catch
-                {
-                    //Double Item
-                    DeleteItem<NewsLink>(nl);
-                    System.Diagnostics.Debug.WriteLine("[NewsLink]Deleting " + nl.Title + " as double");
-                }
+                nl.New = false;
             }
 
+            SaveItems(NewsLinks);
         }
 
         private IList<INewsLink> GetNewsLinksFromSource(string Source)

@@ -366,8 +366,10 @@
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>52891Speedydown.112Frysln</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.112Groningen</MainPackageIdentityName>
+    <MainPackageIdentityName>52891Speedydown.30Seconds</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.BekendeNederlanders</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.CardMarket</MainPackageIdentityName>
+    <MainPackageIdentityName>52891Speedydown.DirtySeconds</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.HVZeeland</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.Joop</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.leftovers</MainPackageIdentityName>
@@ -381,12 +383,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Arm</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.105.1808.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.105.1929.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.105.1808.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.105.1929.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

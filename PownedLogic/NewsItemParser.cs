@@ -234,20 +234,6 @@ namespace PownedLogic
 
         private static async Task GetImagesFromSource(string Source, ObservableCollection<string> Images)
         {
-            if (!Source.Contains("<blockquote class=\"twitter-tweet"))
-            {
-                return;
-            }
-
-            try
-            {
-                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"twitter-tweet", Source, false));
-            }
-            catch
-            {
-                return;
-            }
-
             while (true)
             {
                 if (!Source.Contains("<blockquote class=\"twitter-tweet"))
@@ -258,7 +244,8 @@ namespace PownedLogic
                 try
                 {
                     //GetTwitterURL's
-                    string TwitterHTMLL = HTMLParserUtil.GetContentAndSubstringInput("<blockquote class=\"twitter-tweet", "</blockquote>", Source, out Source);
+                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"twitter", Source, false));
+                    string TwitterHTMLL = HTMLParserUtil.GetContentAndSubstringInput("-tweet", "</blockquote>", Source, out Source);
                     TwitterHTMLL = TwitterHTMLL.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", TwitterHTMLL, false));
                     TwitterHTMLL = TwitterHTMLL.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("</a>", TwitterHTMLL, false));
 
@@ -278,26 +265,19 @@ namespace PownedLogic
 
         private static async Task GetInstaGramImagesFromSource(string Source, ObservableCollection<string> Images)
         {
-            if (!Source.Contains("<blockquote class=\"instagram-media\""))
-            {
-                return;
-            }
-
-            try
-            {
-                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"instagram-media\"", Source, false));
-            }
-            catch
-            {
-                return;
-            }
-
             while (true)
             {
                 try
                 {
+                    if (!Source.Contains("<blockquote class=\"instagram-media\""))
+                    {
+                        return;
+                    }
+
+                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"instagram-", Source, false));
+
                     //GetTwitterURL's
-                    string InstagramHTML = HTMLParserUtil.GetContentAndSubstringInput("<blockquote class=\"instagram-media\"", "</blockquote>", Source, out Source);
+                    string InstagramHTML = HTMLParserUtil.GetContentAndSubstringInput("media\"", "</blockquote>", Source, out Source);
                     InstagramHTML = InstagramHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<a href=\"", InstagramHTML, false));
                     string InstagramURL = HTMLParserUtil.GetContentAndSubstringInput("<a href=\"", "\" style=\"", InstagramHTML, out InstagramHTML);
 

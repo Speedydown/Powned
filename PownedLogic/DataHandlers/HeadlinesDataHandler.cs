@@ -15,7 +15,8 @@ namespace PownedLogic.DataHandlers
     {
         public static readonly HeadlinesDataHandler instance = new HeadlinesDataHandler();
 
-        private HeadlinesDataHandler() : base()
+        private HeadlinesDataHandler()
+            : base()
         {
             lock (locker)
             {
@@ -43,24 +44,24 @@ namespace PownedLogic.DataHandlers
             List<Headline> HeadLines = (await NewHeadlinesTask) as List<Headline>;
 
             HeadLines.Reverse();
+            List<Headline> HeadlinesToAdd = new List<Headline>();
 
             foreach (Headline hl in HeadLines)
             {
-                if (base.GetItems<Headline>().Where(h => h.URL == hl.URL || 
+                if (base.GetItems<Headline>().Where(h => h.URL == hl.URL ||
                     (h.Title == hl.Title && h.ImageURL == h.ImageURL)).Count() == 0)
                 {
                     hl.New = true;
                     hl.Seen = false;
                     hl.TimeStamp = DateTime.Now;
 
-                    lock (locker)
-                    {
-                        base.Insert(hl);
-                    }
+                    HeadlinesToAdd.Add(hl);
 
                     System.Diagnostics.Debug.WriteLine("[Headline]Adding " + hl.Title + " to localDB.");
                 }
             }
+
+            SaveItems(HeadlinesToAdd);
 
             if (MarkHeadlinesAsSeen)
             {
@@ -73,28 +74,28 @@ namespace PownedLogic.DataHandlers
 
         private void MarkHeadlinesAsOld()
         {
-            foreach (Headline hl in GetItems<Headline>().Where(h => h.New))
+            Headline[] Headlines = GetItems<Headline>().Where(h => h.New).ToArray();
+
+            foreach (Headline hl in Headlines)
             {
                 hl.New = false;
-                lock (locker)
-                {
-                    base.Update(hl);
-                }
                 System.Diagnostics.Debug.WriteLine("[Headline]Marking " + hl.Title + " as old");
             }
+
+            SaveItems(Headlines);
         }
 
         private void MarkHeadlinesAsSeen()
         {
-            foreach (Headline h in GetItems<Headline>().Where(h => h.Seen == false))
+            Headline[] Headlines = GetItems<Headline>().Where(h => h.Seen == false).ToArray();
+
+            foreach (Headline h in Headlines)
             {
                 h.Seen = true;
-                lock (locker)
-                {
-                    Update(h);
-                }
                 System.Diagnostics.Debug.WriteLine("[Headline]Marking " + h.Title + " as seen");
             }
+
+            SaveItems(Headlines);
         }
 
         private IList<Headline> GetHeadlinesFromSource(string Source)
