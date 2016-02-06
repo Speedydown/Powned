@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WRCHelperLibrary.Settings;
+using WRCHelperLibrary;
+using XamlControlLibrary.Settings;
 
 namespace PownedLogic
 {

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WebCrawlerTools;
 using Windows.Foundation;
 using WRCHelperLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic
 {

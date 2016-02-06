@@ -18,10 +18,7 @@ namespace PownedLogic.DataHandlers
         private HeadlinesDataHandler()
             : base()
         {
-            lock (locker)
-            {
-                int Result = base.CreateTable(typeof(Headline));
-            }
+            CreateItemTable<Headline>();
         }
 
         public List<Headline> GetNewHeadlines()
@@ -43,12 +40,14 @@ namespace PownedLogic.DataHandlers
 
             List<Headline> HeadLines = (await NewHeadlinesTask) as List<Headline>;
 
+            //Reverse list because the items from source are from new to old.
             HeadLines.Reverse();
             List<Headline> HeadlinesToAdd = new List<Headline>();
+            List<Headline> CurrentHeadlines = base.GetItems<Headline>().ToList();
 
             foreach (Headline hl in HeadLines)
             {
-                if (base.GetItems<Headline>().Where(h => h.URL == hl.URL ||
+                if (CurrentHeadlines.Where(h => h.URL == hl.URL ||
                     (h.Title == hl.Title && h.ImageURL == h.ImageURL)).Count() == 0)
                 {
                     hl.New = true;

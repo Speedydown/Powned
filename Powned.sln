@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Powned.Windows", "Powned\Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Powned.WindowsPhone", "Powned\Powned.WindowsPhone\Powned.WindowsPhone.csproj", "{964DAA2E-A6B3-48A7-9486-1CC2DE086850}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WRCHelperLibrary", "..\Speedydown.nl-API\WRCHelperLibrary\WRCHelperLibrary.csproj", "{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCrawlerTools", "..\Speedydown.nl-API\WebCrawlerTools\WebCrawlerTools.csproj", "{EF41C761-8924-40F6-BC70-AF1064796ED2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlControlLibrary", "..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj", "{09F3EFE7-AC3C-4189-90F1-C7BF9E01AF96}"
@@ -22,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PownedLogic", "PownedLogic\PownedLogic.csproj", "{451944DD-82AE-4B4A-9DE7-571BE763B224}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLogic", "..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj", "{EE050C83-148E-4402-B25C-BC667D855965}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WRCHelperLibrary", "..\Speedydown.nl-API\WRCHelperLibrary\WRCHelperLibrary.csproj", "{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -84,19 +84,6 @@ Global
 		{964DAA2E-A6B3-48A7-9486-1CC2DE086850}.Release|x86.ActiveCfg = Release|x86
 		{964DAA2E-A6B3-48A7-9486-1CC2DE086850}.Release|x86.Build.0 = Release|x86
 		{964DAA2E-A6B3-48A7-9486-1CC2DE086850}.Release|x86.Deploy.0 = Release|x86
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|ARM.ActiveCfg = Debug|ARM
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|ARM.Build.0 = Debug|ARM
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x86.ActiveCfg = Debug|x86
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x86.Build.0 = Debug|x86
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|ARM.ActiveCfg = Release|ARM
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|ARM.Build.0 = Release|ARM
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|x64.ActiveCfg = Release|Any CPU
-		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF41C761-8924-40F6-BC70-AF1064796ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF41C761-8924-40F6-BC70-AF1064796ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF41C761-8924-40F6-BC70-AF1064796ED2}.Debug|ARM.ActiveCfg = Debug|ARM
@@ -166,6 +153,20 @@ Global
 		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x64.ActiveCfg = Release|Any CPU
 		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.ActiveCfg = Release|x86
 		{EE050C83-148E-4402-B25C-BC667D855965}.Release|x86.Build.0 = Release|x86
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|ARM.Build.0 = Debug|ARM
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x86.ActiveCfg = Debug|x86
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Debug|x86.Build.0 = Debug|x86
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|ARM.ActiveCfg = Release|ARM
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|ARM.Build.0 = Release|ARM
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|x64.ActiveCfg = Release|Any CPU
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|x86.ActiveCfg = Release|x86
+		{6F1A5AC4-C4AD-49C8-B37B-C541E09D5742}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
 using WRCHelperLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.Model
 {

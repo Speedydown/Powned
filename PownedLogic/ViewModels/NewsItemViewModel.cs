@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using XamlControlLibrary;
@@ -33,6 +34,9 @@ namespace PownedLogic.ViewModels
             PlaceCommentPanel = Visibility.Collapsed;
             CommentsGridVisiblity = Visibility.Collapsed;
             CommentControlsEnabled = false;
+
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
         }
 
         public async Task LoadState(string URL)

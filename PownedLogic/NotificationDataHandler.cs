@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Notifications;
 using WRCHelperLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic
 {

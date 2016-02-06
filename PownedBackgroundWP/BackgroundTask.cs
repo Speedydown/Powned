@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 using WRCHelperLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedBackground
 {

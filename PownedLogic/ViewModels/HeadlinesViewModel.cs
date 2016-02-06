@@ -11,7 +11,6 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
-using WRCHelperLibrary;
 using XamlControlLibrary;
 
 namespace PownedLogic.ViewModels

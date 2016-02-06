@@ -295,6 +295,10 @@ namespace PownedLogic
                            }
                        });
                 }
+                catch (NullReferenceException)
+                {
+
+                }
                 catch
                 {
                     break;

@@ -373,6 +373,7 @@
     <MainPackageIdentityName>52891Speedydown.HVZeeland</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.Joop</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.leftovers</MainPackageIdentityName>
+    <MainPackageIdentityName>52891Speedydown.MixMarathon</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.NetworkPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.SpreekwoordenApp</MainPackageIdentityName>
     <MainPackageIdentityName>52891Speedydown.Supermarktaanbiedingen</MainPackageIdentityName>
@@ -383,12 +384,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Arm</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.105.1929.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.107.42.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.105.1929.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.107.42.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

@@ -32,10 +32,10 @@
                 </PivotItem.Header>
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="2.5,2.5">
-                        <ListView x:Name="HeadlinesListview" ItemsSource="{Binding Headlines}" ItemTemplate="{StaticResource PownedHeadlines}" IsItemClickEnabled="True" ItemClick="HeadlinesListview_ItemClick">
+                        <ListView x:Name="HeadlinesListview" HorizontalAlignment="Center" ItemsSource="{Binding Headlines}" ItemTemplate="{StaticResource PownedHeadlines}" IsItemClickEnabled="True" ItemClick="HeadlinesListview_ItemClick">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="2"/>
+                                    <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                         </ListView>

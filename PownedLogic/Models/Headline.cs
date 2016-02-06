@@ -9,6 +9,8 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using WRCHelperLibrary;
 using SQLite.Net.Attributes;
+using XamlControlLibrary.Interfaces;
+using System.Net;
 
 namespace PownedLogic.Model
 {
@@ -45,7 +47,16 @@ namespace PownedLogic.Model
             {
                 if (Window.Current != null)
                 {
-                    return (Bounds / 2) - 7;
+                    if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
+                    {
+                        //Landscape
+                        return ((Bounds - 110) / 3) - 10;
+                    }
+                    else
+                    {
+                        //Portrait
+                        return (Bounds / 2) - 7;
+                    }
                 }
                 else
                 {
@@ -56,7 +67,7 @@ namespace PownedLogic.Model
 
         public Headline()
         {
-           
+            
         }
 
         public Headline(string URL, string ImageURL, string Title, string HashTag)
@@ -64,9 +75,8 @@ namespace PownedLogic.Model
             this.URL = URL;
             this.ImageURL = ImageURL;
             this.Title = Title;
-            this.HashTag = HashTag;
+            this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&"); ;
         }
-
 
         public string Content
         {
@@ -82,5 +92,7 @@ namespace PownedLogic.Model
         {
             get { return string.Empty; }
         }
+
+        
     }
 }

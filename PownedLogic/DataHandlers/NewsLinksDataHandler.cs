@@ -11,6 +11,7 @@ using WebCrawlerTools;
 using Windows.Storage;
 using Windows.UI.Core;
 using WRCHelperLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.DataHandlers
 {
@@ -22,10 +23,7 @@ namespace PownedLogic.DataHandlers
         private NewsLinksDataHandler()
             : base()
         {
-            lock (locker)
-            {
-                int Result = base.CreateTable(typeof(NewsLink));
-            }
+            CreateItemTable<NewsLink>();
         }
 
         public async Task<IList<INewsLink>> GetNewsLinks()
@@ -49,12 +47,13 @@ namespace PownedLogic.DataHandlers
                 }
 
                 List<NewsLink> ItemsToAdd = new List<NewsLink>();
+                List<NewsLink> CurrentNewsLink = GetItems<NewsLink>().ToList();
 
                 try
                 {
                     foreach (NewsLink nl in NewslinksFromSource.Reverse())
                     {
-                        if (GetItems<NewsLink>().Where(n => n.URL == nl.URL).Count() == 0)
+                        if (CurrentNewsLink.Where(n => n.URL == nl.URL).Count() == 0)
                         {
                             nl.New = true;
                             nl.TimeStamp = DateTime.Now;
@@ -105,19 +104,14 @@ namespace PownedLogic.DataHandlers
                 }
             }
 
-            BeginTransaction();
+            List<NewsLink> ItemsToDelete = new List<NewsLink>();
+
             foreach (NewsLink nl in NewslinksToDelete)
             {
-                try
-                {
-                    DeleteItem(nl);
-                }
-                catch
-                {
-
-                }
+                ItemsToDelete.Add(nl);
             }
-            Commit();
+
+            DeleteItems(ItemsToDelete);
 
             NewsSemaphore.Release();
         }
@@ -138,27 +132,35 @@ namespace PownedLogic.DataHandlers
         {
             List<INewsLink> NewsLinks = new List<INewsLink>();
 
-            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("id=\"hl-actueel\">", Source, true));
-
-            while (true)
+            try
             {
-                if (!Source.Contains("<li><span class=\"t\">"))
+                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("id=\"hl-actueel\">", Source, true));
+
+                while (true)
                 {
-                    break;
+                    if (!Source.Contains("<li><span class=\"t\">"))
+                    {
+                        break;
+                    }
+
+                    try
+                    {
+                        string Time = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"t\">", "</span>", Source, out Source, "", true);
+                        string URL = HTMLParserUtil.GetContentAndSubstringInput("a href=\"", "\">", Source, out Source, "", false);
+                        string Title = HTMLParserUtil.GetContentAndSubstringInput("\">", "</a>", Source, out Source, "", true);
+
+                        NewsLinks.Add(new NewsLink(Title, Time, URL));
+                    }
+                    catch
+                    {
+                        break;
+                    }
                 }
 
-                try
-                {
-                    string Time = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"t\">", "</span>", Source, out Source, "", true);
-                    string URL = HTMLParserUtil.GetContentAndSubstringInput("a href=\"", "\">", Source, out Source, "", false);
-                    string Title = HTMLParserUtil.GetContentAndSubstringInput("\">", "</a>", Source, out Source, "", true);
-
-                    NewsLinks.Add(new NewsLink(Title, Time, URL));
-                }
-                catch
-                {
-                    break;
-                }
+            }
+            catch
+            {
+                //Locked page?
             }
 
             return NewsLinks;

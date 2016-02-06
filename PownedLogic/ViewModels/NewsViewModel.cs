@@ -11,6 +11,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using WRCHelperLibrary;
 using XamlControlLibrary;
+using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.ViewModels
 {

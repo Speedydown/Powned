@@ -30,10 +30,7 @@ namespace PownedLogic.DataHandlers
         private LoginInfoDataHandler()
             : base()
         {
-            lock (locker)
-            {
-                CreateTable<LoginInfo>();
-            }
+            CreateItemTable<LoginInfo>();
         }
 
         public LoginInfo GetLoginInfo()
@@ -44,10 +41,7 @@ namespace PownedLogic.DataHandlers
             {
                 LoginInfo = new LoginInfo() { UserName = string.Empty, Password = string.Empty };
 
-                lock (locker)
-                {
-                    Insert(LoginInfo);
-                }
+                InsertItem(LoginInfo);
 
                 System.Diagnostics.Debug.WriteLine("[LoginInfo]Adding new logininfo to LocalDB");
             }
@@ -59,11 +53,8 @@ namespace PownedLogic.DataHandlers
         {
             ClearTable<LoginInfo>();
 
-            lock (locker)
-            {
-                Insert(loginInfo);
-                System.Diagnostics.Debug.WriteLine("[LoginInfo]Updating new logininfo to LocalDB");
-            }
+            InsertItem(loginInfo);
+            System.Diagnostics.Debug.WriteLine("[LoginInfo]Updating new logininfo to LocalDB");
         }
 
         private Dictionary<string, string> GetLoginFormFields(string Source, string Email, string Password)

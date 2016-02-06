@@ -13,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -40,6 +41,12 @@ namespace Powned
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+
+        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            DataContext = null;
+            DataContext = MainpageViewModel.instance;
         }
 
         public NavigationHelper NavigationHelper
@@ -76,6 +83,8 @@ namespace Powned
 
             Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
+
+            SizeChanged += MainPage_SizeChanged;
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -119,7 +128,7 @@ namespace Powned
 
         private async Task Search()
         {
-            await Task.Run(() =>SearchViewModel.instance.Search());
+            await Task.Run(() => SearchViewModel.instance.Search());
         }
 
         private void PownedPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
