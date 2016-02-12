@@ -78,7 +78,7 @@
         </Pivot>
     </Grid>
     <Page.BottomAppBar>
-        <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Foreground="White">
+        <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" ClosedDisplayMode="Minimal" Foreground="White">
             <AppBarButton x:Uid="SettingsButton" x:Name="SettingsButton" Icon="Setting" Click="SettingsButton_Click"/>
             <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Icon="World" Click="PownedButton_Click" />
             <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Icon="Refresh" Click="ReloadButton_Click" />

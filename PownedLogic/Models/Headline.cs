@@ -50,7 +50,7 @@ namespace PownedLogic.Model
                     if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
                     {
                         //Landscape
-                        return ((Bounds - 110) / 3) - 10;
+                        return ((Bounds - 150) / 3) - 10;
                     }
                     else
                     {
