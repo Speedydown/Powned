@@ -45,20 +45,32 @@ namespace PownedLogic.Model
         {
             get
             {
-                if (Window.Current != null)
+                try
                 {
-                    if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
+                    if (Bounds == 0)
                     {
-                        //Landscape
-                        return ((Bounds - 150) / 3) - 10;
+                        return 0;
+                    }
+
+                    if (Window.Current != null)
+                    {
+                        if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
+                        {
+                            //Landscape
+                            return ((Bounds - 150) / 3) - 10;
+                        }
+                        else
+                        {
+                            //Portrait
+                            return (Bounds / 2) - 7;
+                        }
                     }
                     else
                     {
-                        //Portrait
-                        return (Bounds / 2) - 7;
+                        return 0;
                     }
                 }
-                else
+                catch
                 {
                     return 0;
                 }

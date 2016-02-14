@@ -21,6 +21,7 @@ namespace PownedLogic.ViewModels
 
         public ObservableCollection<Headline> Headlines { get; private set; }
         private Task LoadDataTask = null;
+        private object locker = new object();
 
         private HeadlinesViewModel()
         {
@@ -45,14 +46,23 @@ namespace PownedLogic.ViewModels
 
         public async Task LoadData(LoadingControl loadingControl)
         {
-            if (LoadDataTask == null || DateTime.Now.Subtract(LastLoadedTimeStamp).TotalMinutes > 5)
+            lock (locker)
             {
-                if (this.loadingControl == null)
+                if (DateTime.Now.Subtract(LastLoadedTimeStamp).TotalMinutes > 5)
                 {
-                    this.loadingControl = loadingControl;
-                }
+                    LastLoadedTimeStamp = DateTime.Now;
 
-                LoadDataTask = LoadDataHelper();
+                    if (this.loadingControl == null)
+                    {
+                        this.loadingControl = loadingControl;
+                    }
+
+                    LoadDataTask = LoadDataHelper();
+                }
+            }
+
+            if (LoadDataTask != null && !LoadDataTask.IsCompleted)
+            {
                 await LoadDataTask;
             }
         }
@@ -77,7 +87,6 @@ namespace PownedLogic.ViewModels
                     }
                 });
 
-            LastLoadedTimeStamp = DateTime.Now;
             SetLastNewsItemAsNotificationMarker();
         }
 
