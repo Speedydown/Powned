@@ -55,6 +55,7 @@ namespace PownedLogic.DataHandlers
                     hl.TimeStamp = DateTime.Now;
 
                     HeadlinesToAdd.Add(hl);
+                    CurrentHeadlines.Add(hl);
 
                     System.Diagnostics.Debug.WriteLine("[Headline]Adding " + hl.Title + " to localDB.");
                 }

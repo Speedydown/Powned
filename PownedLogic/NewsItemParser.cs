@@ -20,6 +20,8 @@ namespace PownedLogic
 
         internal static async Task<NewsItem> GetNewsItemFromSource(string Source)
         {
+            Source = Source.Substring(0, Source.IndexOf("<div id=\"sidebar\">"));
+
             bool GetMediaContent = localSettings.Values["Media weergeven"] != null && Convert.ToBoolean(localSettings.Values["Media weergeven"]);
 
             string SourceBackupForTwitterImage = Source;

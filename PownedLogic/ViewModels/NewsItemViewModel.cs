@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using BaseLogic.ClientIDHandler;
 using PownedLogic.DataHandlers;
 using PownedLogic.Model;
 using System;
@@ -37,6 +38,8 @@ namespace PownedLogic.ViewModels
 
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+
+            Task Notifier = Task.Run(async () => await ClientIDHandler.instance.PostAppStats(ClientIDHandler.AppName.Powned));
         }
 
         public async Task LoadState(string URL)

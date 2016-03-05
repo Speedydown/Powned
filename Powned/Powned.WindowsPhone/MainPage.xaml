@@ -40,7 +40,7 @@
                             </ListView.ItemsPanel>
                         </ListView>
                     </ScrollViewer>
-                    <CLib:LoadingControl x:Uid="LoadingControl" x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                    <CLib:LoadingControl x:Uid="LoadingControl" Margin="15,0" x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                 </Grid>
             </PivotItem>
             <PivotItem x:Name="LatestNieuwsPI" DataContext="{Binding newsViewModel}">
@@ -56,7 +56,7 @@
                             <ListView x:Name="PopularListview" ItemsSource="{Binding PopularHeadlines}" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
                         </StackPanel>
                     </ScrollViewer>
-                    <CLib:LoadingControl x:Uid="LoadingControlActueel" x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+                    <CLib:LoadingControl x:Uid="LoadingControlActueel" Margin="15,0" x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                 </Grid>
             </PivotItem>
             <PivotItem x:Name="ZoekenPI" DataContext="{Binding searchViewModel}">
@@ -72,7 +72,7 @@
                     <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto">
                         <ListView x:Name="SearchListView" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource PownedSearch}" IsItemClickEnabled="True" ItemClick="SearchListView_ItemClick"/>
                     </ScrollViewer>
-                    <CLib:LoadingControl Grid.Row="1" x:Uid="SearchLoadingControl" x:Name="SearchLoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                    <CLib:LoadingControl Grid.Row="1" x:Uid="SearchLoadingControl" Margin="15,0" x:Name="SearchLoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                 </Grid>
             </PivotItem>
         </Pivot>

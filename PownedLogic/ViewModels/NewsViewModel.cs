@@ -50,12 +50,8 @@ namespace PownedLogic.ViewModels
             }
             catch
             {
-
+                return new List<INewsLink>();
             }
-
-            DisplayError = true;
-
-            return new List<INewsLink>();
         }
 
         private async Task<IList<PopularHeadline>> GetPopularHeadlinesOperationAsTask()
@@ -86,43 +82,62 @@ namespace PownedLogic.ViewModels
 
         private async Task LoadDataHelper()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            try
             {
-                NewsLinks.Clear();
-                PopularHeadlines.Clear();
-                HeadersVisibility = Visibility.Collapsed;
-                this.IsLoading = true;
-            });
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    NewsLinks.Clear();
+                    PopularHeadlines.Clear();
+                    HeadersVisibility = Visibility.Collapsed;
+                    this.DisplayError = false;
+                    this.IsLoading = true;
+                });
 
-            Task<IList<INewsLink>> NewsLinkTask = GetNewsLinksOperationAsTask();
-            Task<IList<PopularHeadline>> PopularHeadlinesTask = GetPopularHeadlinesOperationAsTask();
+                Task<IList<INewsLink>> NewsLinkTask = GetNewsLinksOperationAsTask();
+                Task<IList<PopularHeadline>> PopularHeadlinesTask = GetPopularHeadlinesOperationAsTask();
 
-            var Result = await NewsLinkTask;
-            var Result2 = await PopularHeadlinesTask;
+                var Result = await NewsLinkTask;
+                var Result2 = await PopularHeadlinesTask;
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    NewsLinks.Clear();
+                    PopularHeadlines.Clear();
+                    this.IsLoading = false;
+
+                    foreach (INewsLink n in Result)
+                    {
+                        NewsLinks.Add(n);
+                    }
+
+                    foreach (PopularHeadline ph in Result2)
+                    {
+                        PopularHeadlines.Add(ph);
+                    }
+
+                    if (NewsLinks.Count > 0)
+                    {
+                        HeadersVisibility = Visibility.Visible;
+                    }
+                });
+
+                LastLoadedTimeStamp = DateTime.Now;
+
+                if (Result.Count == 0 || Result2.Count == 0)
+                {
+                    throw new Exception("No items");
+                }
+
+                IsLoading = false;
+            }
+            catch
             {
-                NewsLinks.Clear();
-                PopularHeadlines.Clear();
-                this.IsLoading = false;
-
-                foreach (INewsLink n in Result)
-                {
-                    NewsLinks.Add(n);
-                }
-
-                foreach (PopularHeadline ph in Result2)
-                {
-                    PopularHeadlines.Add(ph);
-                }
-
-                if (NewsLinks.Count > 0)
-                {
-                    HeadersVisibility = Visibility.Visible;
-                }
-            });
-
-            LastLoadedTimeStamp = DateTime.Now;
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        IsLoading = false;
+                        DisplayError = true;
+                    });
+            }
         }
 
         public void ClearCachedData()

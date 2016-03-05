@@ -82,9 +82,6 @@ namespace Powned
                 this.DataContext = ViewModel;
                 await ViewModel.LoadState(e.NavigationParameter.ToString());
             }
-     
-
-            await ArticleCounter.AddArticleCount();
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)

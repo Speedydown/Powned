@@ -87,24 +87,9 @@ namespace PownedLogic.ViewModels
                     }
                 });
 
-            SetLastNewsItemAsNotificationMarker();
-        }
-
-        private void SetLastNewsItemAsNotificationMarker()
-        {
             try
             {
-                localSettings.Values["LastNewsItem"] = Headlines.First().URL;
                 NotificationHandler.Run("PownedBackground.BackgroundTask", "PownedBackgroundWorker", 30);
-            }
-            catch
-            {
-
-            }
-
-            try
-            {
-                localSettings.Values["LastNotificationHeadlines"] = Headlines.First().URL;
             }
             catch
             {

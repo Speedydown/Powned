@@ -31,7 +31,7 @@ namespace PownedLogic.DataHandlers
             if (DateTime.Now.Subtract(LoginInfoDataHandler.instance.GetLoginInfo().LastNewsRetrival).TotalMinutes > 4)
             {
                 string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
-                IList<INewsLink> NewslinksFromSource = GetNewsLinksFromSource(PageSource);
+                Task<IList<INewsLink>> NewsLinkTask = Task.Run<IList<INewsLink>>(() => GetNewsLinksFromSource(PageSource));
 
                 await NewsSemaphore.WaitAsync();
 
@@ -48,6 +48,14 @@ namespace PownedLogic.DataHandlers
 
                 List<NewsLink> ItemsToAdd = new List<NewsLink>();
                 List<NewsLink> CurrentNewsLink = GetItems<NewsLink>().ToList();
+
+                IList<INewsLink> NewslinksFromSource = await NewsLinkTask;
+
+                if (NewslinksFromSource.Count == 0)
+                {
+                    NewsSemaphore.Release();
+                    return NewslinksFromSource;
+                }
 
                 try
                 {
