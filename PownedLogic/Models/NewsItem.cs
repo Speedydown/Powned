@@ -117,7 +117,7 @@ namespace PownedLogic.Model
 
             this.Content = HTMLParserUtil.CleanHTMLTagsFromString(this.Content);
 
-            this.AuthorDateTime = AuthorDateTIme;
+            this.AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(AuthorDateTIme); ;
         }
     }
 }

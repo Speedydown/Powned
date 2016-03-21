@@ -27,14 +27,6 @@ Door het niet verstrekken van bepaalde Persoonsgegevens kan deze Applicatie de d
                 <TextBlock FontSize="20" Margin="0,25,0,0" Text="Wijze en plaats van de Gegevensverwerking" FontWeight="Bold" TextWrapping="WrapWholeWords"/>
                 <TextBlock FontSize="20" Text="De Verantwoordelijke voor de verwerking van de Gegevens verwerkt de Gegevens van de Gebruikers op een correcte wijze en neemt passende beveiligingsmaatregelen om onbevoegde toegang tot, bekendmaking, wijziging of vernietiging van de Gegevens zonder toestemming te voorkomen.&#13;&#13;De verwerking van de Gegevens vindt plaats met gebruik van computers en/of IT-tools, waarbij organisatieprocedures en werkwijzen worden gevolgd die nauw aansluiten op de aangegeven doelen. Naast de Verantwoordelijke voor de verwerking van de Gegevens kunnen de gegevens in bepaalde gevallen ook toegankelijk zijn voor bepaalde met de verwerking belaste personen die zijn betrokken bij de exploitatie van de site (beheer, verkoop, marketing, juridisch, systeembeheer) of door de Eigenaar als Gegevensverwerkers aangestelde externe partijen (zoals externe technische serviceproviders, mailprogramma's, hostingproviders, IT-bedrijven, communicatiebureaus). De bijgewerkte lijst van deze partijen kan te allen tijde bij de Verantwoordelijke voor de verwerking van de Gegevens worden aangevraagd.
 " TextWrapping="WrapWholeWords"/>
-                <!--<TextBlock FontSize="20" FontWeight="Bold" Text="Beveiliging gegevens" Margin="0,25,0,0"/>
-                <TextBlock FontSize="20" Text="PowNed draagt er zorg voor dat de door haar geregistreerde persoonsgegevens vertrouwelijk en met
-de grootst mogelijke zorgvuldigheid worden behandeld. Alle persoonlijke gegevens zijn beveiligd
-opgeslagen in een database, die uitsluitend toegankelijk is voor personen voor wie dat uit hoofde van
-hun functie noodzakelijk is. PowNed spant zich verder naar redelijkheid in haar systemen te beveiligen
-tegen verlies en/of tegen enige vorm van onrechtmatig gebruik. PowNed is echter niet aansprakelijk
-voor verlies van gegevens, schade aan bestanden dan wel onrechtmatig verkregen toegang tot
-bestanden." TextWrapping="WrapWholeWords"/>-->
             </StackPanel>
         </ScrollViewer>
     </Grid>
