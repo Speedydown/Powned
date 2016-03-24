@@ -86,7 +86,7 @@ namespace PownedLogic.Model
         {
             this.URL = URL;
             this.ImageURL = ImageURL;
-            this.Title = Title;
+            this.Title = WebUtility.HtmlDecode(Title);
             this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&"); ;
         }
 

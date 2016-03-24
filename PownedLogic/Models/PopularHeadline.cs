@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
@@ -17,7 +18,7 @@ namespace PownedLogic.Model
         {
             this.CommentCount = CommentCount;
             this.URL = URL;
-            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title.Replace("\\", ""));
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title).Replace("\\", ""));
         }
     }
 }
