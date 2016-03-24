@@ -383,12 +383,12 @@
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Arm</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.3005.2312.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.3024.846.0</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
       <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2016.3005.2312.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>2016.3024.846.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

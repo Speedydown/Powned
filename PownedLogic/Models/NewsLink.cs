@@ -3,6 +3,7 @@ using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WebCrawlerTools;
@@ -51,7 +52,7 @@ namespace PownedLogic.Model
 
         public NewsLink(string Title, string Time, string URL)
         {
-            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title.Replace("\\", "")); ;
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title.Replace("\\", "")));
             this.Time = Time;
             this.URL = URL;
         }

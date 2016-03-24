@@ -78,7 +78,7 @@ namespace PownedLogic.Model
 
         public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube, string entry_id)
         {
-            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(Title);
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
             this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
             this.Body = ArticleContent;
             this.Added = Date;

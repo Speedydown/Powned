@@ -11,6 +11,7 @@ using WRCHelperLibrary;
 using SQLite.Net.Attributes;
 using XamlControlLibrary.Interfaces;
 using System.Net;
+using BaseLogic.HtmlUtil;
 
 namespace PownedLogic.Model
 {
@@ -86,7 +87,7 @@ namespace PownedLogic.Model
         {
             this.URL = URL;
             this.ImageURL = ImageURL;
-            this.Title = WebUtility.HtmlDecode(Title);
+            this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
             this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&"); ;
         }
 
