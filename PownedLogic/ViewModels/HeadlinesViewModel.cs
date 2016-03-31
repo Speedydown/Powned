@@ -44,7 +44,7 @@ namespace PownedLogic.ViewModels
             return new List<Headline>();
         }
 
-        public async Task LoadData(LoadingControl loadingControl)
+        public async Task LoadData(LoadingControl loadingControl = null)
         {
             lock (locker)
             {

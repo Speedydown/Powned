@@ -66,7 +66,7 @@ namespace PownedLogic.ViewModels
             }
         }
 
-        public async Task LoadData(LoadingControl loadingControl)
+        public async Task LoadData(LoadingControl loadingControl = null)
         {
             if (LoadDataTask == null || DateTime.Now.Subtract(LastLoadedTimeStamp).TotalMinutes > 5)
             {
