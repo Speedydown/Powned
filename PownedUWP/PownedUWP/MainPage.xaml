@@ -9,15 +9,40 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Pivot>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HeaderItemsGrid.Margin" Value="0,0,-5,0" />
+                        <Setter Target="HeaderItemsGrid.Padding" Value="7,0" />
+                        <Setter Target="HeaderItemsGrid.HorizontalAlignment" Value="Stretch" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HeaderItemsGrid.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="HeaderItemsGrid.Margin" Value="0" />
+                        <Setter Target="HeaderItemsGrid.Padding" Value="10" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Pivot Background="White">
             <Pivot.Style>
                 <StaticResource ResourceKey="PivotStyleDynamicHeader"/>
             </Pivot.Style>
-            <PivotItem  DataContext="{Binding headlinesViewModel}">
+            <PivotItem  DataContext="{Binding headlinesViewModel}" Margin="-5,0">
                 <PivotItem.Header>
                     <Controls:TabHeader Label="item 1" Glyph="&#xE716;" />
                 </PivotItem.Header>
-                <GridView ItemTemplate="{StaticResource PownedHeadlines}" ItemsSource="{Binding Headlines}">
+                <GridView x:Name="HeaderItemsGrid" BorderBrush="Transparent"  ItemTemplate="{StaticResource PownedHeadlines}" SelectionMode="None" ItemsSource="{Binding Headlines}">
 
                 </GridView>
             </PivotItem>

@@ -10,6 +10,80 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/PivotStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/PowNed.xaml"/>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#FF0099" />
+                    <x:String x:Key="ProgressBarIndeterminateForegroundThemeBrush">#FF0099</x:String>
+
+                    <SolidColorBrush x:Key="TextBoxBorderThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="TextBoxForegroundThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="TextBoxBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextBoxDisabledBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextBoxDisabledForegroundThemeBrush" Color="Transparent" />
+
+                    <SolidColorBrush x:Key="ButtonBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonBorderThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="ButtonDisabledBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonDisabledBorderThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonDisabledForegroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonForegroundThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonPointerOverForegroundThemeBrush" Color="#FF0099" />
+                    <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="Transparent" />
+                    <SolidColorBrush x:Key="ButtonPressedForegroundThemeBrush" Color="LightGray" />
+
+
+                    <SolidColorBrush x:Key="PivotHeaderForegroundSelectedBrush" Color="White" />
+                    <SolidColorBrush x:Key="PivotHeaderForegroundUnselectedBrush" Color="LightGray" />
+
+                    <!--GridviewItemStyle-->
+                    <!-- Default style for Windows.UI.Xaml.Controls.GridViewItem -->
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                        <Setter Property="TabNavigation" Value="Local"/>
+                        <Setter Property="IsHoldingEnabled" Value="True"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="0,0,4,4"/>
+                        <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}"/>
+                        <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="GridViewItem">
+                                    <ListViewItemPresenter
+            ContentTransitions="{TemplateBinding ContentTransitions}"
+            SelectionCheckMarkVisualEnabled="True"
+            CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+            CheckBoxBrush="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+            DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+            DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+            FocusBorderBrush="Transparent"
+            FocusSecondaryBorderBrush="Transparent"
+            PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+            PointerOverBackground="Transparent"
+            PointerOverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+            SelectedBackground="{ThemeResource SystemControlHighlightAccentBrush}"
+            SelectedForeground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+            SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+            PressedBackground="Transparent"
+            SelectedPressedBackground="{ThemeResource SystemControlHighlightListAccentHighBrush}"
+            DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+            DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+            ReorderHintOffset="{ThemeResource GridViewItemReorderHintThemeOffset}"
+            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+            ContentMargin="{TemplateBinding Padding}"
+            CheckMode="Overlay"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

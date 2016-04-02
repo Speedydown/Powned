@@ -42,6 +42,40 @@ namespace PownedLogic.Model
         }
 
         [Ignore]
+        public int WidthUwp
+        {
+            get
+            {
+                try
+                {
+                    if (Bounds == 0)
+                    {
+                        return 0;
+                    }
+
+                    if (Window.Current != null)
+                    {
+                        int Width = 0;
+
+                        int NumberOfItems = (int)Window.Current.Bounds.Width / 160;
+
+                        Width = ((Bounds) / NumberOfItems) - 10;
+
+                        return Width;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+        }
+
+        [Ignore]
         public int Width
         {
             get

@@ -31,7 +31,7 @@
                         <Setter Target="Icon.(RelativePanel.AlignVerticalCenterWithPanel)" Value="True" />
                         <Setter Target="LabelText.(RelativePanel.RightOf)" Value="Icon" />
                         <Setter Target="LabelText.(RelativePanel.AlignVerticalCenterWith)" Value="Icon" />
-                        <Setter Target="RelativePanel.Margin" Value="0,0,12,0"/>
+                        <Setter Target="RelativePanel.Margin" Value="12"/>
                         <Setter Target="Icon.Margin" Value="0,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
