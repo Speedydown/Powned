@@ -45,8 +45,10 @@ namespace Powned
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            SizeChanged -= MainPage_SizeChanged;
             DataContext = null;
             DataContext = MainpageViewModel.instance;
+            SizeChanged += MainPage_SizeChanged;
         }
 
         public NavigationHelper NavigationHelper
@@ -85,6 +87,8 @@ namespace Powned
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
 
             SizeChanged += MainPage_SizeChanged;
+
+            StatusBar.GetForCurrentView().HideAsync();
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)

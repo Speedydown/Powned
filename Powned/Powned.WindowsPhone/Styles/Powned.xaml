@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Powned.Styles">
 
-    <Thickness x:Key="PivotPortraitThemePadding">16,25,0,0</Thickness>
-    <Thickness x:Key="PivotLandscapeThemePadding">16,25,0,0</Thickness>
+    <Thickness x:Key="PivotPortraitThemePadding">16,0,0,0</Thickness>
+    <Thickness x:Key="PivotLandscapeThemePadding">16,0,0,0</Thickness>
     <Style x:Uid="CustomPivotStyle" x:Key="CustomPivotStyle" TargetType="Pivot">
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="0"/>
