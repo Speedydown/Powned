@@ -1,4 +1,6 @@
 ﻿using BaseLogic;
+using BaseLogic.Notifications;
+using BaseLogic.Xaml_Controls;
 using PownedLogic.DataHandlers;
 using PownedLogic.Model;
 using System;
@@ -11,7 +13,6 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
-using XamlControlLibrary;
 
 namespace PownedLogic.ViewModels
 {

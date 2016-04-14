@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml.Controls;
-using XamlControlLibrary;
 
 namespace PownedLogic.ViewModels
 {

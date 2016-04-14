@@ -1,4 +1,6 @@
-﻿using PownedLogic.DataHandlers;
+﻿using BaseLogic.HtmlUtil;
+using BaseLogic.Xaml_Controls.Interfaces;
+using PownedLogic.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,13 +9,10 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using WebCrawlerTools;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using WRCHelperLibrary;
-using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.Model
 {

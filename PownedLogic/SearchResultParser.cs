@@ -1,10 +1,10 @@
-﻿using PownedLogic.Model;
+﻿using BaseLogic.HtmlUtil;
+using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebCrawlerTools;
 
 namespace PownedLogic
 {

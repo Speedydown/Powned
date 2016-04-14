@@ -1,4 +1,6 @@
-﻿using PownedLogic;
+﻿using BaseLogic.Notifications;
+using BaseLogic.Xaml_Controls.Interfaces;
+using PownedLogic;
 using PownedLogic.DataHandlers;
 using PownedLogic.Model;
 using System;
@@ -10,8 +12,6 @@ using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Notifications;
-using WRCHelperLibrary;
-using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic
 {

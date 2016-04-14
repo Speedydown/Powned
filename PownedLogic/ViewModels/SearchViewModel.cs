@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using BaseLogic.Xaml_Controls;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using XamlControlLibrary;
 
 namespace PownedLogic.ViewModels
 {

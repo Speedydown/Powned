@@ -107,14 +107,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\BaseLogic\BaseLogic.csproj">
-      <Project>{ee050c83-148e-4402-b25c-bc667d855965}</Project>
-      <Name>BaseLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Speedydown.nl-API\XamlControlLibrary\XamlControlLibrary.csproj">
-      <Project>{09f3efe7-ac3c-4189-90f1-c7bf9e01af96}</Project>
-      <Name>XamlControlLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\PownedLogic\PownedLogic.csproj">
       <Project>{451944dd-82ae-4b4a-9de7-571be763b224}</Project>
       <Name>PownedLogic</Name>

@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using WRCHelperLibrary;
 using SQLite.Net.Attributes;
-using XamlControlLibrary.Interfaces;
 using System.Net;
 using BaseLogic.HtmlUtil;
+using BaseLogic.Xaml_Controls.Interfaces;
 
 namespace PownedLogic.Model
 {

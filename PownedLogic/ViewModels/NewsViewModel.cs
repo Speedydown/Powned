@@ -1,4 +1,6 @@
 ﻿using BaseLogic;
+using BaseLogic.Xaml_Controls;
+using BaseLogic.Xaml_Controls.Interfaces;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -9,9 +11,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using WRCHelperLibrary;
-using XamlControlLibrary;
-using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.ViewModels
 {

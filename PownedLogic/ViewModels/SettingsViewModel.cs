@@ -1,4 +1,6 @@
 ﻿using BaseLogic;
+using BaseLogic.Xaml_Controls;
+using BaseLogic.Xaml_Controls.Settings;
 using PownedLogic.DataHandlers;
 using PownedLogic.Model;
 using System;
@@ -8,8 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using XamlControlLibrary;
-using XamlControlLibrary.Settings;
 
 namespace PownedLogic.ViewModels
 {
@@ -54,7 +54,6 @@ namespace PownedLogic.ViewModels
                                 LoginLoadingPanelVisibility = Visibility.Collapsed;
                                 NotifyPropertyChanged("LoginLoadingPanelVisibility");
                             });
-
                     });
             }
         }
@@ -77,7 +76,5 @@ namespace PownedLogic.ViewModels
             LoginLoadingPanelVisibility = Visibility.Collapsed;
             NotifyPropertyChanged("LoginLoadingPanelVisibility");
         }
-
-
     }
 }

@@ -1,11 +1,11 @@
-﻿using PownedLogic;
+﻿using BaseLogic.Notifications;
+using BaseLogic.Xaml_Controls.Interfaces;
+using PownedLogic;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
-using WRCHelperLibrary;
-using XamlControlLibrary.Interfaces;
 
 namespace PownedBackground
 {

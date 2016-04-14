@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BaseLogic.Xaml_Controls.Settings;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using WRCHelperLibrary;
-using XamlControlLibrary.Settings;
 
 namespace PownedLogic
 {

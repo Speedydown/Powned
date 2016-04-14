@@ -1,4 +1,6 @@
 ﻿using BaseLogic.DataHandler;
+using BaseLogic.HtmlUtil;
+using BaseLogic.Xaml_Controls.Interfaces;
 using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
@@ -6,9 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using WebCrawlerTools;
-using WRCHelperLibrary;
-using XamlControlLibrary.Interfaces;
 
 namespace PownedLogic.Model
 {

@@ -1,29 +1,16 @@
 ﻿using Powned.Common;
-using PownedLogic;
 using PownedLogic.Model;
 using PownedLogic.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using WRCHelperLibrary;
 
 namespace Powned
 {
@@ -35,12 +22,12 @@ namespace Powned
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             instance = this;
-            this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
-            this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            navigationHelper = new NavigationHelper(this);
+            navigationHelper.LoadState += this.NavigationHelper_LoadState;
+            navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -53,12 +40,12 @@ namespace Powned
 
         public NavigationHelper NavigationHelper
         {
-            get { return this.navigationHelper; }
+            get { return navigationHelper; }
         }
 
         public ObservableDictionary DefaultViewModel
         {
-            get { return this.defaultViewModel; }
+            get { return defaultViewModel; }
         }
 
         public static void ClearCachedData()
