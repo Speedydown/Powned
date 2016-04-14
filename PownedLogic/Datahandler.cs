@@ -78,16 +78,9 @@ namespace PownedLogic
             }
 
             URL += "?" + randomizer.Next(0, 20000000);
-
-            Task PostAppStats = Task.Run(() => PostAppStatsHelper(URL));
             string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(URL, Encoding.GetEncoding("iso-8859-1"));
 
             return await NewsItemParser.GetNewsItemFromSource(PageSource);
-        }
-
-        internal async Task PostAppStatsHelper(string URL)
-        {
-            await HTTPGetUtil.GetDataAsStringFromURL("http://speedydown-001-site2.smarterasp.net/api.ashx?Powned=" + URL);
         }
     }
 }
