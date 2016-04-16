@@ -1,4 +1,5 @@
 ﻿using BaseLogic;
+using BaseLogic.ArticleCounter;
 using BaseLogic.ClientIDHandler;
 using BaseLogic.Xaml_Controls;
 using PownedLogic.DataHandlers;
@@ -39,6 +40,7 @@ namespace PownedLogic.ViewModels
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
 
+            Task ArticleCounterTask = ArticleCounter.AddArticleCount("Wij bieden PowNed kostenloos aan en we zouden het op prijs stellen als u de PowNed app een positieve review geeft in de Windows store.", "Bedankt");
             Task Notifier = Task.Run(async () => await ClientIDHandler.instance.PostAppStats(ClientIDHandler.AppName.Powned));
         }
 
