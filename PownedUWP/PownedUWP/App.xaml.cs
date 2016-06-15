@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BaseLogic.ClientIDHandler;
+using BaseLogic.ExceptionHandler;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +35,12 @@ namespace PownedUWP
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            UnhandledException += App_UnhandledException;
+        }
+
+        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+           await ExceptionHandler.instance.PostException(new AppException(e.Exception), (int)ClientIDHandler.AppName.Powned);
         }
 
         /// <summary>

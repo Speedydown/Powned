@@ -43,7 +43,8 @@ namespace PownedUWP
             Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData());
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData());
 
-           // SizeChanged += MainPage_SizeChanged;
+
+            // SizeChanged += MainPage_SizeChanged;
         }
     }
 }
