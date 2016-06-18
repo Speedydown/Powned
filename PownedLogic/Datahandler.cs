@@ -33,12 +33,7 @@ namespace PownedLogic
 
         public IAsyncOperation<IList<INewsLink>> GetNewsLinksByPage(int PageID)
         {
-            return GetNewsLinksByPageHelper().AsAsyncOperation();
-        }
-
-        private async Task<IList<INewsLink>> GetNewsLinksByPageHelper()
-        {
-            return await NewsLinksDataHandler.instance.GetNewsLinks();
+            return GetPopularNewsLinksHelper2().AsAsyncOperation();
         }
 
         public IAsyncOperation<IList<PopularHeadline>> GetPopularNewsLinks()
@@ -46,23 +41,18 @@ namespace PownedLogic
             return GetPopularNewsLinksHelper().AsAsyncOperation();
         }
 
+        public async Task<IList<INewsLink>> GetPopularNewsLinksHelper2()
+        {
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("https://www.powned.tv/nieuws/", Encoding.UTF8);
+
+            return PopularHeadlinesParser.GetHeadlinesFromSource(PageSource).Cast<INewsLink>().ToList();
+        }
+
         private async Task<IList<PopularHeadline>> GetPopularNewsLinksHelper()
         {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/sidebar.js", Encoding.GetEncoding("iso-8859-1"));
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("https://www.powned.tv/nieuws/", Encoding.UTF8);
 
             return PopularHeadlinesParser.GetHeadlinesFromSource(PageSource);
-        }
-
-        public IAsyncOperation<IList<SearchResult>> Search(string Input)
-        {
-            return SearchHelper(Input).AsAsyncOperation();
-        }
-
-        private async Task<IList<SearchResult>> SearchHelper(string Input)
-        {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv/fastsearch?query=" + Input + "&zoek=zoek", Encoding.GetEncoding("iso-8859-1"));
-
-            return SearchResultParser.GetSearchResult(PageSource);
         }
 
         public IAsyncOperation<INewsItem> GetNewsItemByURL(string URL)
@@ -78,7 +68,7 @@ namespace PownedLogic
             }
 
             URL += "?" + randomizer.Next(0, 20000000);
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(URL, Encoding.GetEncoding("iso-8859-1"));
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL(URL, Encoding.UTF8);
 
             return await NewsItemParser.GetNewsItemFromSource(PageSource);
         }

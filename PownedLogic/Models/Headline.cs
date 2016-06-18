@@ -11,6 +11,8 @@ using SQLite.Net.Attributes;
 using System.Net;
 using BaseLogic.HtmlUtil;
 using BaseLogic.Xaml_Controls.Interfaces;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace PownedLogic.Model
 {
@@ -18,6 +20,12 @@ namespace PownedLogic.Model
     {
         public string URL { get; set; }
         public string ImageURL { get; set; }
+        public Uri ImageUrl2 { get
+            {
+                return new Uri(ImageURL);
+            }
+        }
+
         public string Title { get; set; }
         public string HashTag { get; set; }
         public bool New { get; set; }
@@ -81,6 +89,8 @@ namespace PownedLogic.Model
             {
                 try
                 {
+                    Window.Current.SizeChanged -= Current_SizeChanged;
+
                     if (Bounds == 0)
                     {
                         return 0;
@@ -88,6 +98,8 @@ namespace PownedLogic.Model
 
                     if (Window.Current != null)
                     {
+                        Window.Current.SizeChanged += Current_SizeChanged;
+
                         if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
                         {
                             //Landscape
@@ -119,9 +131,14 @@ namespace PownedLogic.Model
         public Headline(string URL, string ImageURL, string Title, string HashTag)
         {
             this.URL = URL;
-            this.ImageURL = ImageURL;
+            this.ImageURL = Constants.Hostname + ImageURL;
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
-            this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&"); ;
+            this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&");
+        }
+
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
+        {
+            NotifyPropertyChanged("Width");
         }
 
         public string Content

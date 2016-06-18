@@ -1,4 +1,5 @@
 ﻿using BaseLogic.HtmlUtil;
+using HtmlAgilityPack;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -20,87 +21,133 @@ namespace PownedLogic
 
         internal static async Task<NewsItem> GetNewsItemFromSource(string Source)
         {
-            Source = Source.Substring(0, Source.IndexOf("<div id=\"sidebar\">"));
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.OptionFixNestedTags = true;
+            htmlDoc.LoadHtml(Source);
 
-            bool GetMediaContent = localSettings.Values["Media weergeven"] != null && Convert.ToBoolean(localSettings.Values["Media weergeven"]);
+            if (htmlDoc.DocumentNode != null)
+            {
+                var ArticleNode = htmlDoc.DocumentNode.Descendants("article").Where(d => d.Attributes.Count(a => a.Value.Contains("page-item")) > 0).FirstOrDefault();
 
-            string SourceBackupForTwitterImage = Source;
-            string Date = string.Empty;
-            string Title = string.Empty;
-            string Hashtag = string.Empty;
-            string ArticleImage = string.Empty;
-            string Summary = string.Empty;
-            List<string> ArticleContent = new List<string>();
-            string AuthorDate = string.Empty;
-            string YoutubeURL = null;
-            string entry_id = string.Empty;
+                string Hashtag = ArticleNode.Attributes.FirstOrDefault(a => a.Name == "data-category").Value;
+                string Title = ArticleNode.Attributes.FirstOrDefault(a => a.Name == "data-title").Value;
 
-            Task NewsItemTask = Task.Run(() =>
+                var ArticleBody = ArticleNode.Descendants("div").Where(d => d.Attributes.Count(a => a.Value.Contains("page-item-body")) > 0).FirstOrDefault();
+                string Author   = ArticleNode.Descendants("span").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__author")) > 0).InnerText;
+                string TimeStamp = ArticleNode.Descendants("time").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__content__date")) > 0).InnerText;  
+
+                string Summary = ArticleNode.Descendants("div").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__content__lead lead")) >
+                 0).InnerText;
+
+                List<string> Content = new List<string>();
+
+                foreach (HtmlNode n in ArticleNode.Descendants("p"))
                 {
-                    entry_id = HTMLParserUtil.GetContentAndSubstringInput("entry_id=", "%26static", Source, out Source);
-
-
-                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
-
-                    YoutubeURL = GetYouTubeURL(Source);
-                    Date = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"articledate\">", "/p><br />", Source, out Source, "", true);
-                    Title = HTMLParserUtil.GetContentAndSubstringInput("<h1>", "</h1><br />", Source, out Source, "", true);
-                    Hashtag = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"hashtag\">", "</p>", Source, out Source, "", true);
-                    ArticleImage = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" alt=", Source, out Source, "", true);
-                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-intro\">", Source, true));
-
-                    Summary = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", Source, out Source, "", true);
-
-                    string RawArticleContent = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "<div id=\"artikel-footer\">", Source, out Source, "", true);
-
-                    while (true)
+                    if (n.InnerText != Summary)
                     {
-                        try
-                        {
-                            if (!RawArticleContent.Contains("<p>"))
-                            {
-                                break;
-                            }
-
-                            string Content = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", RawArticleContent, out RawArticleContent, "", true);
-                            Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-
-                            if (Content != string.Empty)
-                            {
-                                ArticleContent.Add(Content);
-                            }
-                        }
-                        catch
-                        {
-                            break;
-                        }
+                        Content.Add(n.InnerText);
                     }
+                }
 
-                    string image = string.Empty;
+                return new NewsItem(Title, Summary, Content, TimeStamp, Author, string.Empty, new List<Comment>(), new List<string>(), string.Empty, string.Empty);
 
-                    AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
-
-                });
-
-
-            ObservableCollection<string> Images = new ObservableCollection<string>();
-
-            Task<List<Comment>> CommentsTask = Task.Run(() => GetCommentsFromSource(SourceBackupForTwitterImage));
-
-            if (GetMediaContent)
-            {
-                Task BaseImageTask = Task.Run(() => GetBaseImagesFromSource(SourceBackupForTwitterImage, Images));
-                Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
-                Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
-            }
-            else
-            {
-                YoutubeURL = null;
             }
 
-            await NewsItemTask;
 
-            return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL, entry_id);
+
+           
+
+            return null;
+
+
+
+
+
+
+
+
+
+        //    //  Source = Source.Substring(0, Source.IndexOf("<div id=\"sidebar\">"));
+
+        //    bool GetMediaContent = localSettings.Values["Media weergeven"] != null && Convert.ToBoolean(localSettings.Values["Media weergeven"]);
+
+        //    string SourceBackupForTwitterImage = Source;
+        //    string Date = string.Empty;
+        ////    string Title = string.Empty;
+        //  //  string Hashtag = string.Empty;
+        //    string ArticleImage = string.Empty;
+        //    string Summary = string.Empty;
+        //    List<string> ArticleContent = new List<string>();
+        //    string AuthorDate = string.Empty;
+        //    string YoutubeURL = null;
+        //    string entry_id = string.Empty;
+
+        //    Task NewsItemTask = Task.Run(() =>
+        //        {
+        //            entry_id = HTMLParserUtil.GetContentAndSubstringInput("entry_id=", "%26static", Source, out Source);
+
+
+        //            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
+
+        //            YoutubeURL = GetYouTubeURL(Source);
+        //            Date = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"articledate\">", "/p><br />", Source, out Source, "", true);
+        //            Title = HTMLParserUtil.GetContentAndSubstringInput("<h1>", "</h1><br />", Source, out Source, "", true);
+        //            Hashtag = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"hashtag\">", "</p>", Source, out Source, "", true);
+        //            ArticleImage = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" alt=", Source, out Source, "", true);
+        //            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-intro\">", Source, true));
+
+        //            Summary = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", Source, out Source, "", true);
+
+        //            string RawArticleContent = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "<div id=\"artikel-footer\">", Source, out Source, "", true);
+
+        //            while (true)
+        //            {
+        //                try
+        //                {
+        //                    if (!RawArticleContent.Contains("<p>"))
+        //                    {
+        //                        break;
+        //                    }
+
+        //                    string Content = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", RawArticleContent, out RawArticleContent, "", true);
+        //                    Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
+
+        //                    if (Content != string.Empty)
+        //                    {
+        //                        ArticleContent.Add(Content);
+        //                    }
+        //                }
+        //                catch
+        //                {
+        //                    break;
+        //                }
+        //            }
+
+        //            string image = string.Empty;
+
+        //            AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
+
+        //        });
+
+
+        //    ObservableCollection<string> Images = new ObservableCollection<string>();
+
+        //    Task<List<Comment>> CommentsTask = Task.Run(() => GetCommentsFromSource(SourceBackupForTwitterImage));
+
+        //    if (GetMediaContent)
+        //    {
+        //        Task BaseImageTask = Task.Run(() => GetBaseImagesFromSource(SourceBackupForTwitterImage, Images));
+        //        Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
+        //        Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
+        //    }
+        //    else
+        //    {
+        //        YoutubeURL = null;
+        //    }
+
+        //    await NewsItemTask;
+
+        //    return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL, entry_id);
         }
 
         private static string GetYouTubeURL(string Source)

@@ -124,7 +124,7 @@
     <value>Headlines</value>
   </data>
   <data name="LatestNewsHeader.Text" xml:space="preserve">
-    <value>Actueel</value>
+    <value>Meest gelezen</value>
   </data>
   <data name="LoadingControl.ErrorSubText" xml:space="preserve">
     <value>Probeer het later opnieuw.</value>

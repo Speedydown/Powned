@@ -23,6 +23,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <ProgressRing IsActive="True" IsEnabled="True" Background="White" Height="75" Width="75"/>
                 <Image Grid.Row="0" Grid.RowSpan="2"  Source="{Binding ImageURL}"  Stretch="Fill" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                 <Rectangle Grid.Row="1" Fill="Black" Opacity="0.5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                 <TextBlock Text="{Binding Title}" MaxWidth="{Binding Width}" Grid.Row="1" Margin="4.5,0" FontSize="16" FontWeight="Bold" Foreground="White" TextWrapping="WrapWholeWords" />
@@ -33,39 +34,16 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="PownedActueel">
-        <Grid x:Name="Content" Margin="4.5,0,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="{Binding Time}" Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-            <TextBlock Text="{Binding Title}" Margin="4.5,0"  Grid.Column="1" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" FontWeight="Bold" />
-        </Grid>
-    </DataTemplate>
-
     <DataTemplate x:Key="PownedPopular">
-        <Grid x:Name="Content" Margin="4.5,0,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="{Binding CommentCount}" Margin="4.5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-            <TextBlock Text="{Binding Title}" Margin="4.5,0"  Grid.Column="1" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" FontWeight="Bold" />
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate x:Key="PownedSearch">
-        <Grid x:Name="Content" Margin="4.5,0,0,5">
+        <Grid x:Name="Content" Margin="4.5,0,0,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding Title}" Margin="4.5,0"  Grid.Column="0" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontWeight="Bold" />
-            <TextBlock Text="{Binding Content}" Margin="4.5,0"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="15"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" />
+            <TextBlock Text="{Binding Title}" Margin="4.5,0" FontSize="16"  HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWholeWords" Foreground="Black" FontWeight="Bold" />
+            <TextBlock Text="{Binding Date}" Margin="4.5,-20,4.5,5" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
         </Grid>
     </DataTemplate>
 

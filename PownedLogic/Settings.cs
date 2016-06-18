@@ -18,7 +18,6 @@ namespace PownedLogic
 
         public static void Init()
         {
-            _settingsContainer.AddSwitch(new ToggleSwitchSetting(false, "Notificaties actueel", "Aan", "Uit"));
             _settingsContainer.AddSwitch(new ToggleSwitchSetting(false, "Notificaties headlines", "Aan", "Uit"));
             _settingsContainer.AddSwitch(new ToggleSwitchSetting(true, "Reacties weergeven", "Aan", "Uit"));
             _settingsContainer.AddSwitch(new ToggleSwitchSetting(true, "Media weergeven", "Aan", "Uit"));

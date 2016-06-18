@@ -1,4 +1,5 @@
 ﻿using BaseLogic.HtmlUtil;
+using HtmlAgilityPack;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -14,26 +15,24 @@ namespace PownedLogic
         {
             List<PopularHeadline> Headlines = new List<PopularHeadline>();
 
-            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<ul class=\"headlines\" id=\"hl-populair\">", Source, true));
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.OptionFixNestedTags = true;
+            htmlDoc.LoadHtml(Source);
 
-            while (true)
+            if (htmlDoc.DocumentNode != null)
             {
-                if (!Source.Contains("<li><span class=\"c\""))
-                {
-                    break;
-                }
+                var HeadlineNode = htmlDoc.DocumentNode.Descendants("div").Where(d => d.Attributes.Count(a => a.Value.Contains("page-sidebar__section--mostread")) > 0).FirstOrDefault();
 
-                try
-                {
-                    string CommentCount = HTMLParserUtil.GetContentAndSubstringInput("<li><span class=\"c\">", "</span>", Source, out Source, "", true);
-                    string URL = HTMLParserUtil.GetContentAndSubstringInput("a href=\"", "\">", Source, out Source, "", false);
-                    string Title = HTMLParserUtil.GetContentAndSubstringInput("\">", "</a>", Source, out Source, "", true);
+                var HeadlineNodes = HeadlineNode.Descendants("li").Where(d => d.Attributes.Count(a => a.Value.Contains("list-item")) > 0);
 
-                    Headlines.Add(new PopularHeadline(CommentCount, URL, Title));
-                }
-                catch
+                foreach (HtmlNode Node in HeadlineNodes)
                 {
-                    break;
+                    IEnumerable<HtmlNode> SpanNodes = Node.Descendants("span");
+                    string Date = SpanNodes.FirstOrDefault(n => n.Attributes.Count(a => a.Value == "content-date") > 0).InnerText;
+                    string Title = SpanNodes.FirstOrDefault(n => n.Attributes.Count(a => a.Value == "content-title") > 0).InnerText;
+                    string Url = Node.Descendants("a").FirstOrDefault().Attributes.FirstOrDefault(a => a.Name == "href").Value;
+
+                    Headlines.Add(new PopularHeadline(Date, Url, Title));
                 }
             }
 

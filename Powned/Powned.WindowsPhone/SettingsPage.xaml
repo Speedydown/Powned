@@ -20,17 +20,7 @@
             <Grid>
                 <StackPanel Margin="12,0" DataContext="{Binding loginInfo}">
                     <TextBlock Text="Instellingen" Foreground="Black" FontSize="33" VerticalAlignment="Bottom" FontWeight="SemiBold" />
-                    <TextBlock Text="Inloggen:" FontWeight="Bold" FontSize="25" Foreground="Black"/>
-                    <TextBlock Text="{Binding LoginStatus}" FontSize="20" Foreground="Black"/>
-
-                    <TextBox Text="{Binding UserName, Mode=TwoWay}" PlaceholderText="Email" IsEnabled="{Binding LoginControlsEnabled}"/>
-                    <PasswordBox Password="{Binding Password, Mode=TwoWay}" PlaceholderText="Wachtwoord" IsEnabled="{Binding LoginControlsEnabled}"/>
-                    <Button HorizontalAlignment="Stretch" Foreground="{ThemeResource ButtonBorderThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" Content="{Binding LoginText}" Click="Button_Click" IsEnabled="{Binding LoginControlsEnabled}"/>
                     <TextBlock Text="Notificaties:" FontWeight="Bold" FontSize="25" Foreground="Black"/>
-                </StackPanel>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding LoginLoadingPanelVisibility}" >
-                    <ProgressRing IsActive="True" Background="White" />
-                    <TextBlock Text="Inloggen kan even duren.&#x0a;De geenstijl registratie zuigt apenballen!" TextAlignment="Center" MaxWidth="500" HorizontalAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="15"/>
                 </StackPanel>
             </Grid>
             <XamlCL:SettingsControl DataContext="{Binding settingsContainer}" x:Name="SettingsControl" Settings="{Binding}" Foreground="Black" Margin="5,0"/>

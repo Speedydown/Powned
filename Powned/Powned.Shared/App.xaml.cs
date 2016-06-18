@@ -131,7 +131,7 @@ namespace Powned
         void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            Task t = ExceptionHandler.instance.PostException(new AppException(e.Exception), (int)BaseLogic.ClientIDHandler.ClientIDHandler.AppName.Powned);
+            Task t = ExceptionHandler.instance.PostException(new AppException(e.Exception, (int)BaseLogic.ClientIDHandler.ClientIDHandler.AppName.Powned));
         } 
 
 #if WINDOWS_PHONE_APP

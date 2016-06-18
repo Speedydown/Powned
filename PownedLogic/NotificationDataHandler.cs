@@ -46,19 +46,7 @@ namespace PownedLogic
             {
                 BadgeHandler.CreateBadge(UnseenHeadlines.Count);
             }
-
-            if (localSettings.Values["Notificaties actueel"] != null && 
-                Convert.ToBoolean(localSettings.Values["Notificaties actueel"]))
-            {
-                foreach (INewsLink nl in await Datahandler.instance.GetNewsLinksByPage(0))
-                {
-                    if ((nl as NewsLink).New)
-                    {
-                        NotificationHandler.CreateNotification(nl.Title, string.Empty, nl.URL);
-                    }
-                }
-            }
-
+       
             return UnseenHeadlines.Cast<INewsLink>().ToList();
         }
     }

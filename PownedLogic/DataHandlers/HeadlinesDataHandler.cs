@@ -1,5 +1,6 @@
 ﻿using BaseLogic.DataHandler;
 using BaseLogic.HtmlUtil;
+using HtmlAgilityPack;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace PownedLogic.DataHandlers
             return GetItems<Headline>().Where(h => h.Seen == false).OrderByDescending(h => h.TimeStamp).ThenBy(h => h.InternalID).ToList();
         }
 
-        public async Task<IList<Headline>> GetLatestHeadlines(bool MarkHeadlinesAsSeen = false, int Limit = 30)
+        public async Task<IList<Headline>> GetLatestHeadlines(bool MarkHeadlinesAsSeen = false, int Limit = 20)
         {
-            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("http://www.powned.tv", Encoding.GetEncoding("iso-8859-1"));
+            string PageSource = await HTTPGetUtil.GetDataAsStringFromURL("https://www.powned.tv/nieuws/", Encoding.GetEncoding("iso-8859-1"));
             Task<IList<Headline>> NewHeadlinesTask = Task.Run(() => GetHeadlinesFromSource(PageSource));
 
             MarkHeadlinesAsOld();
@@ -101,45 +102,25 @@ namespace PownedLogic.DataHandlers
         private IList<Headline> GetHeadlinesFromSource(string Source)
         {
             List<Headline> Headlines = new List<Headline>();
-            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<ul id=\"fpthumbs\">", Source, true));
-            Source = Source.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<div id=\"sidebar\">", Source, true));
 
-            while (true)
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.OptionFixNestedTags = true;
+            htmlDoc.LoadHtml(Source);
+
+            if (htmlDoc.DocumentNode != null)
             {
-                try
+                var HeadlineNodes = htmlDoc.DocumentNode.Descendants("article").Where(d => d.Attributes.Count(a => a.Value.Contains("medium-news-item")) > 0);
+
+                foreach (HtmlNode Node in HeadlineNodes)
                 {
-                    if (!Source.Contains("<a href=\""))
-                    {
-                        break;
-                    }
+                    string ImageUrl = Node.Descendants("img").FirstOrDefault().Attributes.FirstOrDefault(a => a.Name == "data-src").Value.Split('?').First() + "?anchor=center&amp;mode=crop&amp;width=500&amp;height=500";
 
-                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<a href=\"", Source, false));
-                    string URL = HTMLParserUtil.GetContentAndSubstringInput("<a href=\"", "\">", Source, out Source, "", true);
-                    string ImageURL = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" />", Source, out Source, "", true);
+                    IEnumerable<HtmlNode> SpanNodes = Node.Descendants("span");
+                    string HashTag = SpanNodes.FirstOrDefault(n => n.Attributes.Count(a => a.Value == "item-title__label label") > 0).InnerText;
+                    string Title = SpanNodes.FirstOrDefault(n => n.Attributes.Count(a => a.Value == "item-title__heading__title") > 0).InnerText;
+                    string Url = Node.Descendants("a").FirstOrDefault().Attributes.FirstOrDefault(a => a.Name == "href").Value;
 
-                    string TitleEndTag = "</span></h2>";
-
-                    try
-                    {
-                        int EndTag1Index = HTMLParserUtil.GetPositionOfStringInHTMLSource("</span></h2>", Source, false);
-                        int Endtag2Index = HTMLParserUtil.GetPositionOfStringInHTMLSource("<img", Source, false);
-
-                        TitleEndTag = (EndTag1Index < Endtag2Index || Endtag2Index == -1)
-                            ? "</span></h2>" : "<img";
-                    }
-                    catch
-                    {
-
-                    }
-
-                    string Title = HTMLParserUtil.GetContentAndSubstringInput("<h2><span>", TitleEndTag, Source, out Source, "", true);
-                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<span class=\"hashtag\">", Source, false));
-                    string HashTag = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"hashtag\">", "</span>", Source, out Source, "", true);
-                    Headlines.Add(new Headline(URL, ImageURL, Title, HashTag));
-                }
-                catch
-                {
-                    break;
+                    Headlines.Add(new Headline(Url, ImageUrl, Title, HashTag));
                 }
             }
 

@@ -65,7 +65,7 @@ namespace Powned
             {
                 NewsItemControl.DisableFullScreen = true;
                 ViewModel = new NewsItemViewModel(LoadingControl);
-                this.DataContext = ViewModel;
+                DataContext = ViewModel;
                 await ViewModel.LoadState(e.NavigationParameter.ToString());
             }
         }
@@ -106,18 +106,6 @@ namespace Powned
         private void ShareButton_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private async void PlaceCommentButton_Click(object sender, RoutedEventArgs e)
-        {
-            await ViewModel.PlaceCommentButton_Click(sender, e);
-
-            await NewsItemViewModel.PlaceCommentTask;
-
-            if (RefreshPage)
-            {
-                Frame.Navigate(typeof(ItemPage), ViewModel.URL);
-            }
         }
     }
 }

@@ -5,7 +5,7 @@
     xmlns:local="using:Powned"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" SizeChanged="Page_SizeChanged"
+    mc:Ignorable="d"
     xmlns:CLib="using:BaseLogic.Xaml_Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -25,7 +25,7 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
 
-        <Pivot x:Name="PownedPivot" Style="{StaticResource CustomPivotStyle}" SelectionChanged="PownedPivot_SelectionChanged">
+        <Pivot x:Name="PownedPivot" Style="{StaticResource CustomPivotStyle}">
             <PivotItem x:Name="HeadlinesPI" DataContext="{Binding headlinesViewModel}">
                 <PivotItem.Header>
                     <TextBlock x:Uid="HeadlinesHeader" Style="{StaticResource PivotHeaderStyle}" />
@@ -50,8 +50,6 @@
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="6,2.5">
                         <StackPanel>
-                            <TextBlock x:Uid="ActueelTextblock" x:Name="ActueelTextblock" Visibility="{Binding HeadersVisibility}" Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
-                            <ListView x:Name="ActueelListview" ItemsSource="{Binding NewsLinks}" ItemTemplate="{StaticResource PownedActueel}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="ActueelListview_ItemClick"/>
                             <TextBlock x:Uid="PopularTextblock" x:Name="PopularTextblock" Visibility="{Binding HeadersVisibility}"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
                             <ListView x:Name="PopularListview" ItemsSource="{Binding PopularHeadlines}" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
                         </StackPanel>
@@ -59,30 +57,12 @@
                     <CLib:LoadingControl x:Uid="LoadingControlActueel" Margin="15,0" x:Name="LoadingControlActueel" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
                 </Grid>
             </PivotItem>
-            <PivotItem x:Name="ZoekenPI" DataContext="{Binding searchViewModel}">
-                <PivotItem.Header>
-                    <TextBlock x:Uid="SearchHeader" Style="{StaticResource PivotHeaderStyle}" />
-                </PivotItem.Header>
-                <Grid Margin="-20, -23, -20, 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBox x:Uid="SearchTextbox" x:Name="SearchTextbox" Text="{Binding SearchQuery, Mode=TwoWay}" IsEnabled="True" Grid.Row="0" Margin="4,5,4.5,5" KeyDown="SearchTextbox_KeyDown"/>
-                    <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto">
-                        <ListView x:Name="SearchListView" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource PownedSearch}" IsItemClickEnabled="True" ItemClick="SearchListView_ItemClick"/>
-                    </ScrollViewer>
-                    <CLib:LoadingControl Grid.Row="1" x:Uid="SearchLoadingControl" Margin="15,0" x:Name="SearchLoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
-                </Grid>
-            </PivotItem>
         </Pivot>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Foreground="White" ClosedDisplayMode="Minimal">
             <AppBarButton x:Uid="SettingsButton" x:Name="SettingsButton" Icon="Setting" Click="SettingsButton_Click"/>
-            <AppBarButton x:Uid="PownedButton" x:Name="PownedButton" Icon="World" Click="PownedButton_Click" />
             <AppBarButton x:Uid="ReloadButton" x:Name="ReloadButton" Icon="Refresh" Click="ReloadButton_Click" />
-            <AppBarButton x:Uid="SearchButton" x:Name="SearchButton" Visibility="Collapsed" Icon="Find" Click="SearchButton_Click" />
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Uid="PrivacyPolicyButton" x:Name="PrivacyPolicyButton" Label="Privacy policy"  Click="PrivacyPolicyButton_Click"/>
             </CommandBar.SecondaryCommands>

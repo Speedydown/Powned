@@ -42,15 +42,6 @@
                         </ListView>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="2" Margin="4">
-                    <ProgressRing IsActive="True" Background="White" Visibility="{Binding PlaceCommentProgressRingVisibility}"/>
-                    <StackPanel x:Name="PlaceCommentPanel" Visibility="{Binding PlaceCommentPanel}">
-                        <TextBlock FontSize="32" FontWeight="Bold" Foreground="Black" Text="Reageer ook"/>
-                        <TextBlock Foreground="Black" Text="{Binding LoginStatus}" FontSize="18" DataContext="{Binding loginInfo}"/>
-                        <TextBox x:Name="CommentTextbox" PlaceholderText="Ventileer hier je gedachten." TextWrapping="Wrap" AcceptsReturn="True" Height="200" Text="{Binding CommentText, Mode=TwoWay}" Foreground="Black" IsEnabled="{Binding CommentControlsEnabled}"/>
-                        <Button x:Name="PlaceCommentButton" HorizontalAlignment="Stretch" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}" Content="Verstuur" Click="PlaceCommentButton_Click" IsEnabled="{Binding CommentControlsEnabled}"/>
-                    </StackPanel>
-                </Grid>
             </Grid>
         </ScrollViewer>
         <CLib:LoadingControl Grid.Row="0" Grid.RowSpan="2" Background="White" x:Name="LoadingControl" TextColor="{ThemeResource ApplicationPageBackgroundThemeBrush}" ErrorText="PowNed is niet beschikbaar :(" ErrorSubText="Probeer het later opnieuw."  LoadingText="Een ogenblik geduld."/>

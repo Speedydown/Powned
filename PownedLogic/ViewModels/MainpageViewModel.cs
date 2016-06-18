@@ -18,27 +18,14 @@ namespace PownedLogic.ViewModels
         public string LastParameter { get; set; }
         public HeadlinesViewModel headlinesViewModel { get; private set; }
         public NewsViewModel newsViewModel { get; private set; }
-        public SearchViewModel searchViewModel { get; private set; }
-        public Task LoginTask { get; private set; }
 
         private MainpageViewModel()
         {
             this.headlinesViewModel = HeadlinesViewModel.instance;
             this.newsViewModel = NewsViewModel.instance;
-            this.searchViewModel = SearchViewModel.instance;
 
             TileUpdateManager.CreateTileUpdaterForApplication().Clear();
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
-
-            LoginTask = Task.Run(async () =>
-                {
-                    LoginInfo loginInfo = LoginInfoDataHandler.instance.GetLoginInfo();
-
-                    if (!(loginInfo.UserName == string.Empty || loginInfo.Password == string.Empty))
-                    {
-                        await LoginInfoDataHandler.instance.Login(loginInfo);
-                    }
-                });
         }
     }
 }

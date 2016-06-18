@@ -1,4 +1,5 @@
 ﻿using Powned.Common;
+using PownedLogic;
 using PownedLogic.Model;
 using PownedLogic.ViewModels;
 using System;
@@ -27,15 +28,7 @@ namespace Powned
             navigationHelper = new NavigationHelper(this);
             navigationHelper.LoadState += this.NavigationHelper_LoadState;
             navigationHelper.SaveState += this.NavigationHelper_SaveState;
-            NavigationCacheMode = NavigationCacheMode.Enabled;
-        }
-
-        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SizeChanged -= MainPage_SizeChanged;
-            DataContext = null;
-            DataContext = MainpageViewModel.instance;
-            SizeChanged += MainPage_SizeChanged;
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
 
         public NavigationHelper NavigationHelper
@@ -57,11 +50,10 @@ namespace Powned
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(instance.LoadingControlActueel));
         }
 
-        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             Frame.BackStack.Clear();
-            this.DataContext = MainpageViewModel.instance;
-            SearchViewModel.instance.SetLoadingControl(SearchLoadingControl);
+            this.DataContext = MainpageViewModel.instance;      
 
             //WindowsPhone only functions
             StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
@@ -72,10 +64,9 @@ namespace Powned
 
             Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
             Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
+            Task MessageServiceTask = MessageService.instance.DisplayInfoMessage();
 
-            SizeChanged += MainPage_SizeChanged;
-
-            StatusBar.GetForCurrentView().HideAsync();
+            await StatusBar.GetForCurrentView().HideAsync();
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -102,76 +93,14 @@ namespace Powned
             ClearCachedData();
         }
 
-        private void SearchTextbox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                Task Search = this.Search();
-
-                var control = sender as Control;
-                var isTabStop = control.IsTabStop;
-                control.IsTabStop = false;
-                control.IsEnabled = false;
-                control.IsEnabled = true;
-                control.IsTabStop = isTabStop;
-            }
-        }
-
-        private async Task Search()
-        {
-            await Task.Run(() => SearchViewModel.instance.Search());
-        }
-
-        private void PownedPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (PownedPivot.SelectedItem == ZoekenPI)
-            {
-                ReloadButton.Visibility = Visibility.Collapsed;
-                SearchButton.Visibility = Visibility.Visible;
-
-            }
-            else
-            {
-                ReloadButton.Visibility = Visibility.Visible;
-                SearchButton.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            Task Search = this.Search();
-
-            var control = sender as Control;
-            var isTabStop = control.IsTabStop;
-            control.IsTabStop = false;
-            control.IsEnabled = false;
-            control.IsEnabled = true;
-            control.IsTabStop = isTabStop;
-        }
-
         private void HeadlinesListview_ItemClick(object sender, ItemClickEventArgs e)
         {
             Frame.Navigate(typeof(ItemPage), (e.ClickedItem as Headline).URL);
         }
 
-        private async void PownedButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("http://www.powned.tv/"));
-        }
-
-        private void ActueelListview_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            Frame.Navigate(typeof(ItemPage), (e.ClickedItem as NewsLink).URL);
-        }
-
         private void PopularListview_ItemClick(object sender, ItemClickEventArgs e)
         {
             Frame.Navigate(typeof(ItemPage), (e.ClickedItem as PopularHeadline).URL);
-        }
-
-        private void SearchListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            Frame.Navigate(typeof(ItemPage), (e.ClickedItem as SearchResult).URL);
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -183,11 +112,5 @@ namespace Powned
         {
             Frame.Navigate(typeof(PrivacyPolicy));
         }
-
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-
-        }
-
     }
 }

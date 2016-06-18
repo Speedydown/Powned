@@ -89,6 +89,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\..\win10apps.nl\BaseLogic\BaseLogic.csproj">
+      <Project>{EE050C83-148E-4402-B25C-BC667D855965}</Project>
+      <Name>BaseLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PownedLogic\PownedLogic.csproj">
       <Project>{451944dd-82ae-4b4a-9de7-571be763b224}</Project>
       <Name>PownedLogic</Name>
