@@ -75,16 +75,16 @@ namespace PownedLogic.Model
 
         public IList<Comment> Comments { get; private set; }
 
-        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate,  string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube, string entry_id)
+        public NewsItem(string Title, string Summary, IList<string> ArticleContent, string Date, string AuthorDate, string ArticleImage, IList<Comment> Comments, IList<string> Images, string Youtube, string entry_id)
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
-            this.ContentSummary =  HTMLParserUtil.CleanHTMLTagsFromString(Summary);
+            this.ContentSummary = HTMLParserUtil.CleanHTMLTagsFromString(Summary);
             this.Body = ArticleContent;
             this.Added = Date;
-            this.Author = AuthorDate;
+            this.Author = Date + " | " + AuthorDate;
 
             if (Youtube != null && Youtube.Length > 0)
-            this.YoutubeURL = new Uri(Youtube);
+                this.YoutubeURL = new Uri(Youtube);
 
             this.ImageList = Images;
             this.Comments = Comments;
@@ -97,26 +97,34 @@ namespace PownedLogic.Model
 
     public sealed class Comment
     {
-        public string Content { get; private set; }
-        public string AuthorDateTime { get; private set; }
+        public string id { get; set; }
+        public string text { get; set; }
+        public string dateCreated { get; set; }
+        public string nickname { get; set; }
+        public bool isBaby { get; set; }
+        public int statusId { get; set; }
+        public int notOkCount { get; set; }
 
-        public Comment(string Content, string AuthorDateTIme)
+
+
+        public string Content
         {
-            this.Content = Content;
-
-            while (this.Content.EndsWith("\n"))
+            get
             {
-                this.Content = this.Content.Substring(0, this.Content.Length - 1);
+                return text;
             }
+        }
 
-            if (this.Content.Contains("#"))
+        public string AuthorDateTime
+        {
+            get
             {
-                this.Content = WebUtility.HtmlDecode(this.Content);
+                DateTime Date = DateTime.Now;
+                DateTime.TryParse(dateCreated, out Date);
+
+
+                return nickname + " | " + Date.ToString("dd-MM-yyyy HH:mm:ss");
             }
-
-            this.Content = HTMLParserUtil.CleanHTMLTagsFromString(this.Content);
-
-            this.AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(AuthorDateTIme); ;
         }
     }
 }

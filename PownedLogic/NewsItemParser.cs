@@ -1,5 +1,6 @@
 ﻿using BaseLogic.HtmlUtil;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 using PownedLogic.Model;
 using System;
 using System.Collections.Generic;
@@ -33,8 +34,8 @@ namespace PownedLogic
                 string Title = ArticleNode.Attributes.FirstOrDefault(a => a.Name == "data-title").Value;
 
                 var ArticleBody = ArticleNode.Descendants("div").Where(d => d.Attributes.Count(a => a.Value.Contains("page-item-body")) > 0).FirstOrDefault();
-                string Author   = ArticleNode.Descendants("span").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__author")) > 0).InnerText;
-                string TimeStamp = ArticleNode.Descendants("time").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__content__date")) > 0).InnerText;  
+                string Author = ArticleNode.Descendants("span").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__author")) > 0).InnerText;
+                string TimeStamp = ArticleNode.Descendants("time").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__content__date")) > 0).InnerText;
 
                 string Summary = ArticleNode.Descendants("div").FirstOrDefault(s => s.Attributes.Count(a => a.Value.Contains("page-item__content__lead lead")) >
                  0).InnerText;
@@ -43,164 +44,51 @@ namespace PownedLogic
 
                 foreach (HtmlNode n in ArticleNode.Descendants("p"))
                 {
-                    if (n.InnerText != Summary)
+                    if (n.InnerText != Summary && !string.IsNullOrWhiteSpace(n.InnerText))
                     {
                         Content.Add(n.InnerText);
                     }
                 }
 
-                return new NewsItem(Title, Summary, Content, TimeStamp, Author, string.Empty, new List<Comment>(), new List<string>(), string.Empty, string.Empty);
+                ObservableCollection<string> Images = new ObservableCollection<string>();
 
+                //Images
+                //Task T = Task.Run(() => GetImagesFromTwitter(ArticleNode, Images));
+
+                return new NewsItem(Title, Summary, Content, TimeStamp, Author, string.Empty, await GetComments(ArticleNode), Images, GetYouTubeURL(ArticleNode), string.Empty);
             }
-
-
-
-           
 
             return null;
-
-
-
-
-
-
-
-
-
-        //    //  Source = Source.Substring(0, Source.IndexOf("<div id=\"sidebar\">"));
-
-        //    bool GetMediaContent = localSettings.Values["Media weergeven"] != null && Convert.ToBoolean(localSettings.Values["Media weergeven"]);
-
-        //    string SourceBackupForTwitterImage = Source;
-        //    string Date = string.Empty;
-        ////    string Title = string.Empty;
-        //  //  string Hashtag = string.Empty;
-        //    string ArticleImage = string.Empty;
-        //    string Summary = string.Empty;
-        //    List<string> ArticleContent = new List<string>();
-        //    string AuthorDate = string.Empty;
-        //    string YoutubeURL = null;
-        //    string entry_id = string.Empty;
-
-        //    Task NewsItemTask = Task.Run(() =>
-        //        {
-        //            entry_id = HTMLParserUtil.GetContentAndSubstringInput("entry_id=", "%26static", Source, out Source);
-
-
-        //            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"acarhead\">", Source, true));
-
-        //            YoutubeURL = GetYouTubeURL(Source);
-        //            Date = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"articledate\">", "/p><br />", Source, out Source, "", true);
-        //            Title = HTMLParserUtil.GetContentAndSubstringInput("<h1>", "</h1><br />", Source, out Source, "", true);
-        //            Hashtag = HTMLParserUtil.GetContentAndSubstringInput("<p class=\"hashtag\">", "</p>", Source, out Source, "", true);
-        //            ArticleImage = HTMLParserUtil.GetContentAndSubstringInput("<img src=\"", "\" alt=", Source, out Source, "", true);
-        //            Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"artikel-intro\">", Source, true));
-
-        //            Summary = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", Source, out Source, "", true);
-
-        //            string RawArticleContent = HTMLParserUtil.GetContentAndSubstringInput("<div class=\"artikel-main\">", "<div id=\"artikel-footer\">", Source, out Source, "", true);
-
-        //            while (true)
-        //            {
-        //                try
-        //                {
-        //                    if (!RawArticleContent.Contains("<p>"))
-        //                    {
-        //                        break;
-        //                    }
-
-        //                    string Content = HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", RawArticleContent, out RawArticleContent, "", true);
-        //                    Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-
-        //                    if (Content != string.Empty)
-        //                    {
-        //                        ArticleContent.Add(Content);
-        //                    }
-        //                }
-        //                catch
-        //                {
-        //                    break;
-        //                }
-        //            }
-
-        //            string image = string.Empty;
-
-        //            AuthorDate = HTMLParserUtil.GetContentAndSubstringInput("<span class=\"author-date\">", "</span>", Source, out Source, "", true);
-
-        //        });
-
-
-        //    ObservableCollection<string> Images = new ObservableCollection<string>();
-
-        //    Task<List<Comment>> CommentsTask = Task.Run(() => GetCommentsFromSource(SourceBackupForTwitterImage));
-
-        //    if (GetMediaContent)
-        //    {
-        //        Task BaseImageTask = Task.Run(() => GetBaseImagesFromSource(SourceBackupForTwitterImage, Images));
-        //        Task InstagramTask = Task.Run(() => GetInstaGramImagesFromSource(SourceBackupForTwitterImage, Images));
-        //        Task TwitterImagesTask = Task.Run(() => GetImagesFromSource(SourceBackupForTwitterImage, Images));
-        //    }
-        //    else
-        //    {
-        //        YoutubeURL = null;
-        //    }
-
-        //    await NewsItemTask;
-
-        //    return new NewsItem(Title, Summary, ArticleContent, Date, AuthorDate, ArticleImage, await CommentsTask, Images, YoutubeURL, entry_id);
         }
 
-        private static string GetYouTubeURL(string Source)
+        private static string GetYouTubeURL(HtmlNode ArticleNode)
         {
-            if (!Source.Contains("https://www.youtube.com/embed/"))
+            if (ApplicationData.Current.LocalSettings.Values["Media weergeven"] != null && Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values["Media weergeven"]))
             {
-                return null;
+                var YoutubeNode = ArticleNode.Descendants("iframe").Where(n => n.Attributes.Count(a => a.Value.Contains("youtube")) > 0).FirstOrDefault();
+
+                if (YoutubeNode == null)
+                {
+                    return null;
+                }
+
+                return YoutubeNode.Attributes.SingleOrDefault(a => a.Name == "src").Value;
             }
 
-            try
-            {
-                Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("https://www.youtube.com/embed/", Source, false));
-                string YoutubeID = HTMLParserUtil.GetContentAndSubstringInput("https://www.youtube.com/embed/", "\"", Source, out Source, "", true);
-
-                return "https://www.youtube.com/embed/" + YoutubeID;
-            }
-            catch
-            {
-                return null;
-            }
+            return null;
         }
 
-        private static async Task<List<Comment>> GetCommentsFromSource(string Source)
+        private static async Task<List<Comment>> GetComments(HtmlNode ArticleNode)
         {
-            List<Comment> Comments = new List<Comment>();
-
             if (ApplicationData.Current.LocalSettings.Values["Reacties weergeven"] != null && Convert.ToBoolean(ApplicationData.Current.LocalSettings.Values["Reacties weergeven"]))
             {
-                try
-                {
-                    string CommentHTML = HTMLParserUtil.GetContentAndSubstringInput("<div id=\"comments\">", "<div id=\"reageerhier\">", Source, out Source, "", true);
+                string ArticleID = ArticleNode.Attributes.SingleOrDefault(a => a.Name.Contains("data-id")).Value;
+                string CommentsJson = await HTTPGetUtil.GetDataAsStringFromURL("https://services.powned.tv/v1/articles/" + ArticleID + "/comments");
 
-
-                    int HalfOFCommentsIndex = CommentHTML.IndexOf("<div class=\"comment\"", CommentHTML.Length / 2);
-
-                    if (HalfOFCommentsIndex == -1)
-                    {
-                        return Comments;
-                    }
-
-                    Task<List<Comment>> FirstHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(0, HalfOFCommentsIndex)));
-                    Task<List<Comment>> SecondHalf = Task.Run(() => CommentsParser(CommentHTML.Substring(HalfOFCommentsIndex)));
-
-                    Comments.AddRange(await FirstHalf);
-                    Comments.AddRange(await SecondHalf);
-                }
-                catch
-                {
-
-                }
+                return JsonConvert.DeserializeObject<List<Comment>>(CommentsJson);
             }
 
-            return Comments;
+            return new List<Comment>();
         }
 
         private static void GetBaseImagesFromSource(string Source, ObservableCollection<string> Images)
@@ -230,84 +118,17 @@ namespace PownedLogic
             }
         }
 
-        private async static Task<List<Comment>> CommentsParser(string CommentHTML)
+        private static async Task GetImagesFromTwitter(HtmlNode ArticleNode, ObservableCollection<string> Images)
         {
-            List<Comment> Comments = new List<Comment>();
+            var TwitterNodes = ArticleNode.Descendants("iframe").Where(n => n.Attributes.Count(a => a.Value.Contains("twitter-tweet")) > 0);
 
-            while (true)
+            foreach (HtmlNode TwitterNode in TwitterNodes)
             {
-                try
+                var TwitterUrlNodes = TwitterNode.Descendants("a").Where(n => n.Attributes.Count(a => a.Value.Contains("MediaCard-borderoverlay")) > 0);
+
+                foreach (HtmlNode TwitterUrlNode in TwitterUrlNodes)
                 {
-                    if (!CommentHTML.Contains("<div class=\"comment\""))
-                    {
-                        break;
-                    }
-
-                    CommentHTML = CommentHTML.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<div class=\"comment\"", CommentHTML, true));
-                    string Content = string.Empty;
-
-                    string ThisCommentHTML = CommentHTML.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("<p class=\"footer\">", CommentHTML, false));
-
-                    while (true)
-                    {
-                        try
-                        {
-                            if (!ThisCommentHTML.Contains("<p>"))
-                            {
-                                break;
-                            }
-
-                            Content += HTMLParserUtil.GetContentAndSubstringInput("<p>", "</p>", ThisCommentHTML, out ThisCommentHTML, "", true) + "\n";
-                        }
-                        catch
-                        {
-                            break;
-                        }
-                    }
-
-                    Content = Content.Substring(0, Content.Length - 1);
-                    Content = HTMLParserUtil.CleanHTMLTagsFromString(Content);
-
-                    string AuthorDateTime = HTMLParserUtil.CleanHTMLTagsFromString(HTMLParserUtil.GetContentAndSubstringInput("<p class=\"footer\">", "<span title", CommentHTML, out CommentHTML, "", true));
-
-                    Comments.Add(new Comment(HTMLParserUtil.CleanHTTPTagsFromInput(Content), AuthorDateTime));
-                }
-                catch
-                {
-                    break;
-                }
-            }
-
-            return Comments;
-        }
-
-        private static async Task GetImagesFromSource(string Source, ObservableCollection<string> Images)
-        {
-            while (true)
-            {
-                if (!Source.Contains("<blockquote class=\"twitter-tweet"))
-                {
-                    return;
-                }
-
-                try
-                {
-                    //GetTwitterURL's
-                    Source = Source.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("<blockquote class=\"twitter", Source, false));
-                    string TwitterHTMLL = HTMLParserUtil.GetContentAndSubstringInput("-tweet", "</blockquote>", Source, out Source);
-                    TwitterHTMLL = TwitterHTMLL.Substring(HTMLParserUtil.GetPositionOfStringInHTMLSource("pic.twitter.com", TwitterHTMLL, false));
-                    TwitterHTMLL = TwitterHTMLL.Substring(0, HTMLParserUtil.GetPositionOfStringInHTMLSource("</a>", TwitterHTMLL, false));
-
-                    string ImageURL = await GetPicture("http://" + TwitterHTMLL);
-
-                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                      {
-                          Images.Add(ImageURL);
-                      });
-                }
-                catch
-                {
-                    break;
+                    Images.Add(await GetPicture(TwitterUrlNode.Attributes.SingleOrDefault(a => a.Name == "href").Value));
                 }
             }
         }

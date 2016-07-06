@@ -25,7 +25,7 @@ namespace PownedLogic
 
             try
             {
-                InfoMessageShown = (bool)localSettings.Values["InfoMessage1"];
+                InfoMessageShown = (bool)localSettings.Values["InfoMessage2"];
             }
             catch
             {
@@ -34,9 +34,9 @@ namespace PownedLogic
 
             if (!InfoMessageShown)
             {
-                localSettings.Values["InfoMessage1"] = true;
+                localSettings.Values["InfoMessage2"] = true;
 
-                var messageDialog = new Windows.UI.Popups.MessageDialog("Doordat PowNed een nieuwe site heeft uitgerold is deze app op dit moment in beperkte vorm beschikbaar. Nieuwe functies worden z.s.m. toegevoegd.", "Nieuwe site PowNed");
+                var messageDialog = new Windows.UI.Popups.MessageDialog("Doordat PowNed een nieuwe site heeft uitgerold is deze app op dit moment in beperkte vorm beschikbaar.\n\nNieuwe functies:\n\tAfbeeldingen headlines verkleind\n\tComments\n\tYoutube", "Nieuwe site PowNed");
                 messageDialog.Commands.Add(
                 new UICommand("Ik snap het", CommandInvokedHandler));
                 await messageDialog.ShowAsync();
