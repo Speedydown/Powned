@@ -19,6 +19,7 @@ namespace Powned
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        public DateTime LastLoaded { get; private set; }
         public static MainPage instance = null;
 
         public MainPage()
@@ -53,20 +54,20 @@ namespace Powned
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             Frame.BackStack.Clear();
-            this.DataContext = MainpageViewModel.instance;      
+            this.DataContext = MainpageViewModel.instance;
 
-            //WindowsPhone only functions
-            StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
-            ToastNotificationManager.History.Clear();
+            if (DateTime.Now.Subtract(LastLoaded).TotalMinutes > 5)
+            {
+                await StatusBar.GetForCurrentView().HideAsync();
+                ToastNotificationManager.History.Clear();
 
-            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+                TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
 
-            Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
-            Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
-            Task MessageServiceTask = MessageService.instance.DisplayInfoMessage();
-
-            await StatusBar.GetForCurrentView().HideAsync();
+                Task HeadlinesTask = Task.Run(() => HeadlinesViewModel.instance.LoadData(LoadingControl));
+                Task NewsTask = Task.Run(() => NewsViewModel.instance.LoadData(LoadingControlActueel));
+                Task MessageServiceTask = MessageService.instance.DisplayInfoMessage();
+            }
         }
 
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
