@@ -113,7 +113,7 @@ namespace PownedLogic.DataHandlers
 
                 foreach (HtmlNode Node in HeadlineNodes)
                 {
-                    string ImageUrl = Node.Descendants("img").FirstOrDefault().Attributes.FirstOrDefault(a => a.Name == "data-src").Value.Split('?').First() + "?anchor=center&mode=crop&width=75&height=75";
+                    string ImageUrl = Node.Descendants("img").FirstOrDefault().Attributes.FirstOrDefault(a => a.Name == "data-src").Value.Split('?').First() + "?anchor=center&mode=crop&width=175&height=175";
 
                     IEnumerable<HtmlNode> SpanNodes = Node.Descendants("span");
                     string HashTag = SpanNodes.FirstOrDefault(n => n.Attributes.Count(a => a.Value == "item-title__label label") > 0).InnerText;

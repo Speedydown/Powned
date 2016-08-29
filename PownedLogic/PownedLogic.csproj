@@ -103,6 +103,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Datahandler.cs" />
     <Compile Include="DataHandlers\HeadlinesDataHandler.cs" />
+    <Compile Include="DataHandlers\WindowSizeManager.cs" />
     <Compile Include="MessageService.cs" />
     <Compile Include="Models\Headline.cs" />
     <Compile Include="Models\NewsItem.cs" />

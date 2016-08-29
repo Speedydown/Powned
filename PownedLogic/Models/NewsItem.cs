@@ -79,12 +79,21 @@ namespace PownedLogic.Model
         {
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
             this.ContentSummary = HTMLParserUtil.CleanHTMLTagsFromString(Summary);
+
             this.Body = ArticleContent;
+
+            if (this.Body.First() == ContentSummary)
+            {
+                this.Body.Remove(this.Body.First());
+            }
+
             this.Added = Date;
             this.Author = Date + " | " + AuthorDate;
 
             if (Youtube != null && Youtube.Length > 0)
+            {
                 this.YoutubeURL = new Uri(Youtube);
+            }
 
             this.ImageList = Images;
             this.Comments = Comments;

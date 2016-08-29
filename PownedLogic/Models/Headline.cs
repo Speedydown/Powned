@@ -13,6 +13,7 @@ using BaseLogic.HtmlUtil;
 using BaseLogic.Xaml_Controls.Interfaces;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using PownedLogic.DataHandlers;
 
 namespace PownedLogic.Model
 {
@@ -20,7 +21,9 @@ namespace PownedLogic.Model
     {
         public string URL { get; set; }
         public string ImageURL { get; set; }
-        public Uri ImageUrl2 { get
+        public Uri ImageUrl2
+        {
+            get
             {
                 return new Uri(ImageURL);
             }
@@ -30,56 +33,9 @@ namespace PownedLogic.Model
         public string HashTag { get; set; }
         public bool New { get; set; }
         public bool Seen { get; set; }
-        public DateTime TimeStamp { get; set; }
-
-        [Ignore]
-        public int Bounds
+        public DateTime TimeStamp
         {
-            get
-            {
-                 try
-                 {
-                     return (int)(Window.Current.Bounds.Width);
-                 }
-                 catch
-                 {
-                     return 0;
-                 }
-            }
-        }
-
-        [Ignore]
-        public int WidthUwp
-        {
-            get
-            {
-                try
-                {
-                    if (Bounds == 0)
-                    {
-                        return 0;
-                    }
-
-                    if (Window.Current != null)
-                    {
-                        int Width = 0;
-
-                        int NumberOfItems = (int)Window.Current.Bounds.Width / 160;
-
-                        Width = ((Bounds) / NumberOfItems) - 10;
-
-                        return Width;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-                catch
-                {
-                    return 0;
-                }
-            }
+            get; set;
         }
 
         [Ignore]
@@ -87,45 +43,23 @@ namespace PownedLogic.Model
         {
             get
             {
-                try
-                {
-                    Window.Current.SizeChanged -= Current_SizeChanged;
-
-                    if (Bounds == 0)
-                    {
-                        return 0;
-                    }
-
-                    if (Window.Current != null)
-                    {
-                        Window.Current.SizeChanged += Current_SizeChanged;
-
-                        if (Window.Current.Bounds.Width > Window.Current.Bounds.Height)
-                        {
-                            //Landscape
-                            return ((Bounds - 120) / 3) - 10;
-                        }
-                        else
-                        {
-                            //Portrait
-                            return (Bounds / 2) - 7;
-                        }
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
-                catch
-                {
-                    return 0;
-                }
+                return WindowSizeManager.instance.ItemWidth;
             }
         }
 
         public Headline()
         {
-            
+            AttachEventHandler();
+        }
+
+        public async void AttachEventHandler()
+        {
+            WindowSizeManager.instance.SizeManagerUpdate += Instance_SizeManagerUpdate;
+        }
+
+        private void Instance_SizeManagerUpdate(object sender, WindowSizeChangedEventArgs e)
+        {
+            NotifyPropertyChanged("Width");
         }
 
         public Headline(string URL, string ImageURL, string Title, string HashTag)
@@ -134,11 +68,8 @@ namespace PownedLogic.Model
             this.ImageURL = Constants.Hostname + ImageURL;
             this.Title = HTMLParserUtil.CleanHTMLTagsFromString(WebUtility.HtmlDecode(Title));
             this.HashTag = WebUtility.HtmlDecode(HashTag).Replace("&amp;", "&");
-        }
 
-        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            NotifyPropertyChanged("Width");
+            AttachEventHandler();
         }
 
         public string Content
@@ -156,6 +87,6 @@ namespace PownedLogic.Model
             get { return string.Empty; }
         }
 
-        
+
     }
 }

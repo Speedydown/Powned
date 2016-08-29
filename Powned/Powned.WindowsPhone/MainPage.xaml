@@ -50,7 +50,7 @@
                 <Grid Margin="-20, -23, -20, 0">
                     <ScrollViewer VerticalScrollMode="Auto" Margin="6,2.5">
                         <StackPanel>
-                            <TextBlock x:Uid="PopularTextblock" x:Name="PopularTextblock" Visibility="{Binding HeadersVisibility}"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
+                            <TextBlock x:Uid="PopularTextblock" x:Name="PopularTextblock"  Margin="9,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" TextWrapping="WrapWholeWords" />
                             <ListView x:Name="PopularListview" ItemsSource="{Binding PopularHeadlines}" ItemTemplate="{StaticResource PownedPopular}" IsItemClickEnabled="true" IsHitTestVisible="true" ItemClick="PopularListview_ItemClick"/>
                         </StackPanel>
                     </ScrollViewer>
